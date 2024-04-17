@@ -8,6 +8,7 @@ namespace ProjectASParagus
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddControllers();
 
             var app = builder.Build();
 
@@ -27,6 +28,7 @@ namespace ProjectASParagus
             app.UseAuthorization();
 
             app.MapRazorPages();
+            app.MapControllers();
 
             app.Run();
         }
