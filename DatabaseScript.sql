@@ -43,6 +43,8 @@ CREATE INDEX idx_user_id ON Users(user_id);
 CREATE INDEX idx_recipe_id ON RecipeIngredients(recipe_id);
 CREATE INDEX idx_ingredient_id ON RecipeIngredients(ingredient_id);
 
+DROP USER IF EXISTS 'ASParagus_admin'@'localhost';
+DROP USER IF EXISTS 'ASParagus_user'@'localhost';
 CREATE USER 'ASParagus_admin'@'localhost' IDENTIFIED BY 'adminPass';
 GRANT ALL PRIVILEGES ON ASParagus_admin.* to 'ASParagus_admin'@'localhost';
 GRANT EXECUTE ON ASPARAGUSDB.* TO 'ASParagus_admin'@'localhost';
