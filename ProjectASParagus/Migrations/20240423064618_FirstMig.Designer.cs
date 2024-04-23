@@ -12,8 +12,8 @@ using ProjectASParagus.Objects;
 namespace ProjectASParagus.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240423063125_ASParagusDb")]
-    partial class ASParagusDb
+    [Migration("20240423064618_FirstMig")]
+    partial class FirstMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
