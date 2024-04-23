@@ -45,5 +45,10 @@ namespace ProjectASParagus.Services
         {
             return db.Users.Find(id);
         }
+
+        public List<User> GetAllUsers()
+        {
+            return db.Users.ToList();
+        }
     }
 }

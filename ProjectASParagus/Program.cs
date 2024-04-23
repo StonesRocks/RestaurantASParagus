@@ -14,6 +14,9 @@ namespace ProjectASParagus
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddControllers().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            builder.Services.AddTransient<UserService>();
+            builder.Services.AddTransient<BookingService>();
+            builder.Services.AddTransient<MenuService>();
 
             string connectionString = builder.Configuration.GetConnectionString("mySqlConnectionString");
             builder.Services.AddDbContext<DatabaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));

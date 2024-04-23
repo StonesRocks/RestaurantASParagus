@@ -15,6 +15,25 @@ namespace ProjectASParagus.Controllers
             this.userService = userService;
         }
 
+        [HttpGet("SetTestSubjects")]
+        public ActionResult SetTestSubjects()
+        {
+            User user1 = new User(
+                "John", "bongcloud", "John@chess.com", "007", false
+                );
+            if (userService.CreateUser(user1))
+            {
+                return Ok();
+            }
+            return Conflict();
+        }
+
+        [HttpGet("GetAllUsers")]
+        public List<User> GetAllUsers()
+        {
+            return userService.GetAllUsers();
+        }
+
         [HttpPost("AddUser")]
         public ActionResult CreateUser(User user)
         {
