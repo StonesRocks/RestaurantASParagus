@@ -20,6 +20,23 @@ namespace ProjectASParagus.Services
             return true;
         }
 
+        public User LoginUser(string userName, string userPass)
+        {
+            User user = db.Users.FirstOrDefault(u => u.UserName == userName);
+            if (user == null)
+            {
+                return null;
+            }
+            if (BCrypt.Net.BCrypt.Verify(userPass, user.Password))
+            {
+                if (user.IsAdmin)
+                {
+                    return user;
+                }
+            }
+            return null;
+        }
+
         public bool DeleteUser(int id)
         {
             User user = db.Users.Find(id);
@@ -39,10 +56,17 @@ namespace ProjectASParagus.Services
             {
                 return false;
             }
-            oldUser = user;
+
+            oldUser.UserName = user.UserName;
+            oldUser.Email = user.Email;
+            oldUser.Password = user.Password;
+            oldUser.PhoneNumber = user.PhoneNumber;
+            oldUser.IsAdmin = user.IsAdmin;
+
             db.SaveChanges();
             return true;
         }
+
 
         public User GetUser(int id)
         {

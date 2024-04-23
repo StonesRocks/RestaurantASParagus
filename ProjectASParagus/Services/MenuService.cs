@@ -10,6 +10,7 @@ namespace ProjectASParagus.Services
             this.db = db;
         }
 
+
         public bool CreateMenu(MenuItem menu)
         {
             db.MenuItems.Add(menu);

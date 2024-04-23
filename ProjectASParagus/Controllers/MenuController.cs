@@ -15,6 +15,32 @@ namespace ProjectASParagus.Controllers
             this.menuService = menuService;
         }
 
+        /*
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            // Ensure the file is an image
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                return BadRequest("Only images are allowed");
+            }
+
+            // Create a new filename for every upload to avoid name collisions
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine("ProjectASParagus/Images/", fileName);
+
+            // Save the file to the server
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Save the filePath to your database here
+
+            return Ok();
+        }
+        */
+
         [HttpPost("AddMenuItem")]
         public ActionResult CreateMenuItem(MenuItem menuItem)
         {
