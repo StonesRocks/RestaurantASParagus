@@ -20,7 +20,7 @@ namespace ProjectASParagus
 
             string connectionString = builder.Configuration.GetConnectionString("mySqlConnectionString");
             builder.Services.AddDbContext<DatabaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -26,6 +26,5 @@ namespace ProjectASParagus.Objects
         }
 
         public User() { }
-
     }
 }
