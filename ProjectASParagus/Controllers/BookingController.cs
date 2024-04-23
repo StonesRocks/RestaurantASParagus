@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectASParagus.Objects;
+using ProjectASParagus.Services;
 
 namespace ProjectASParagus.Controllers
 {
@@ -7,5 +9,55 @@ namespace ProjectASParagus.Controllers
     [ApiController]
     public class BookingController : ControllerBase
     {
+        BookingService bookingService;
+        public BookingController(BookingService bookingService)
+        {
+            this.bookingService = bookingService;
+        }
+
+        [HttpPost("AddBooking")]
+        public ActionResult CreateBooking(Booking booking)
+        {
+            if (booking == null)
+            {
+                return BadRequest();
+            }
+            if (bookingService.CreateBooking(booking))
+            {
+                return Ok();
+            }
+            return Conflict();
+        }
+
+        [HttpDelete("DeleteBooking/{id}")]
+        public ActionResult DeleteBooking(int id)
+        {
+            if (bookingService.DeleteBooking(id))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpPut("UpdateBooking")]
+        public ActionResult UpdateBooking(Booking booking)
+        {
+            if (bookingService.UpdateBooking(booking))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpGet("GetBooking/{id}")]
+        public ActionResult GetBooking(int id)
+        {
+            Booking booking = bookingService.GetBooking(id);
+            if (booking == null)
+            {
+                return NotFound();
+            }
+            return Ok(booking);
+        }
     }
 }

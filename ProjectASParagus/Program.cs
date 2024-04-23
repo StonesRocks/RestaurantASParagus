@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using ProjectASParagus.Objects;
+using System.Text.Json.Serialization;
+
 namespace ProjectASParagus
 {
     public class Program
@@ -8,7 +12,11 @@ namespace ProjectASParagus
 
             // Add services to the container.
             builder.Services.AddRazorPages();
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            builder.Services.AddDbContext<DatabaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+            string connectionString = builder.Configuration.GetConnectionString("mySqlConnectionString");
+            builder.Services.AddDbContext<DatabaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
             var app = builder.Build();
 

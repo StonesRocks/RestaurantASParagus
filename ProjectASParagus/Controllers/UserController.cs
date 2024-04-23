@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectASParagus.Objects;
+using ProjectASParagus.Services;
 
 namespace ProjectASParagus.Controllers
 {
@@ -7,5 +9,55 @@ namespace ProjectASParagus.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        UserService userService;
+        public UserController(UserService userService)
+        {
+            this.userService = userService;
+        }
+
+        [HttpPost("AddUser")]
+        public ActionResult CreateUser(User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            if (userService.CreateUser(user))
+            {
+                return Ok();
+            }
+            return Conflict();
+        }
+
+        [HttpDelete("DeleteUser/{id}")]
+        public ActionResult DeleteUser(int id)
+        {
+            if (userService.DeleteUser(id))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpPut("UpdateUser")]
+        public ActionResult UpdateUser(User user)
+        {
+            if (userService.UpdateUser(user))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpGet("GetUser/{id}")]
+        public ActionResult GetUser(int id)
+        {
+            User user = userService.GetUser(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
     }
 }
