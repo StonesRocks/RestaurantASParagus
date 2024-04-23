@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectASParagus.Objects;
+using ProjectASParagus.Services;
 using System.Text.Json.Serialization;
 
 namespace ProjectASParagus
