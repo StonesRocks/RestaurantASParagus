@@ -12,6 +12,7 @@ namespace ProjectASParagus.Services
 
         public bool CreateBooking(Booking booking)
         {
+            
             db.Bookings.Add(booking);
             db.SaveChanges();
             return true;

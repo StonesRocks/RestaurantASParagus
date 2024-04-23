@@ -1,4 +1,5 @@
-﻿using ProjectASParagus.Objects;
+﻿using BCrypt.Net;
+using ProjectASParagus.Objects;
 
 namespace ProjectASParagus.Services
 {
@@ -12,6 +13,8 @@ namespace ProjectASParagus.Services
 
         public bool CreateUser(User user)
         {
+            //krypterar användarens lösenord med Bcrypt(kolla Db för att se hashat lösen)
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             db.Users.Add(user);
             db.SaveChanges();
             return true;

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectASParagus.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMig : Migration
+    public partial class CreateASParagusDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -81,6 +81,11 @@ namespace ProjectASParagus.Migrations
                         principalColumn: "BookingId");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_BookingDate",
+                table: "Bookings",
+                column: "BookingDate");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_BookingId",

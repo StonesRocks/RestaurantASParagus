@@ -13,6 +13,11 @@ namespace ProjectASParagus.Objects
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<User> Users { get; set; }
 
-        //publid DbSet<[Class]> [variable Name] { get; set; }
+
+        //skapar index över BookingDate.
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Booking>().HasIndex(b => b.BookingDate);
+        }
     }
 }

@@ -12,8 +12,8 @@ using ProjectASParagus.Objects;
 namespace ProjectASParagus.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240423064618_FirstMig")]
-    partial class FirstMig
+    [Migration("20240423084027_CreateASParagusDb")]
+    partial class CreateASParagusDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,8 @@ namespace ProjectASParagus.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("BookingId");
+
+                    b.HasIndex("BookingDate");
 
                     b.ToTable("Bookings");
                 });

@@ -63,7 +63,7 @@ namespace ProjectASParagus.Controllers
         {
             if (userService.UpdateUser(user))
             {
-                return Ok();
+                return Ok();    
             }
             return NotFound();
         }

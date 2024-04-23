@@ -49,6 +49,8 @@ namespace ProjectASParagus.Migrations
 
                     b.HasKey("BookingId");
 
+                    b.HasIndex("BookingDate");
+
                     b.ToTable("Bookings");
                 });
 
