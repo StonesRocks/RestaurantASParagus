@@ -14,7 +14,7 @@ namespace ProjectASParagus.Objects
         public string PhoneNumber { get; set; }
         public bool IsAdmin { get; set; }
 
-        public Dictionary<DateTime,int> BookingLog { get; set; }
+        //public Dictionary<DateTime,int> BookingLog { get; set; }
 
         public User(string userName, string password, string email, string phoneNumber, bool isAdmin)
         {
@@ -24,6 +24,8 @@ namespace ProjectASParagus.Objects
             PhoneNumber = phoneNumber;
             IsAdmin = isAdmin;
         }
+
+        public User() { }
 
     }
 }

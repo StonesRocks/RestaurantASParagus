@@ -11,7 +11,6 @@ namespace ProjectASParagus.Objects
 
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
-
         public DbSet<User> Users { get; set; }
 
         //publid DbSet<[Class]> [variable Name] { get; set; }
