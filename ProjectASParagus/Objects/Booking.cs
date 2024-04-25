@@ -31,7 +31,7 @@ namespace ProjectASParagus.Objects
             PhoneNumber = phoneNumber;
             if (Email == null || PhoneNumber == null)
             {
-                throw new System.Exception("Email or Phone Number must be provided");
+                throw new Exception("Email or Phone Number must be provided");
             }
             PartySize = partySize;
             BookingDate = bookingDate;

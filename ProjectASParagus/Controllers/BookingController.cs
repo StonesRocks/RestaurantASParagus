@@ -29,6 +29,19 @@ namespace ProjectASParagus.Controllers
             return Conflict();
         }
 
+        //denna funktionen kallas när användaren har fyllt i bookings uppgifter
+        [HttpGet("ShowBookings")]
+        public ActionResult ShowBooking(Booking booking)
+        {
+            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings(booking);
+
+            if (bookingDictionary.Count == 0) //inga tillgängliga tider att boka
+            {
+                return NotFound("There are currently no available bookings. Please try again later.");
+            }
+            return Ok(bookingDictionary);
+        }   
+
         [HttpDelete("DeleteBooking/{id}")]
         public ActionResult DeleteBooking(int id)
         {

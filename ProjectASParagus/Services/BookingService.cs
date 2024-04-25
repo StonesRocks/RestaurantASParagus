@@ -23,6 +23,7 @@ namespace ProjectASParagus.Services
             }
             catch (Exception ex)
             {
+                //för att logga in consolen
                 Console.WriteLine($"Could not book, something went wrong in BookingService CreateBooking \t{ex.Message}");
                 return false;
             }
@@ -41,7 +42,7 @@ namespace ProjectASParagus.Services
             return sumOfBookings; //Ger tillbaka hur många det är bokade den angivna tiden med den önskade bokningen inräknad.
         }
 
-        //Denna funktionen visar för användaren vilka tider som är tillgängliga!
+        //Funktionen visar för användaren vilka tider som är tillgängliga!
         public Dictionary<DateTime,int> GiveBookings(Booking booking)
         {
             Dictionary<DateTime,int> Capacity = new Dictionary<DateTime,int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
@@ -85,16 +86,22 @@ namespace ProjectASParagus.Services
         {
             try
             {
-                //Booking oldBooking = db.Bookings.Find(booking.BookingId); //retunerar null om inget hittas
-                Booking oldBooking = db.Bookings.FirstOrDefault(b => b.BookingId == booking.BookingId); //med FirstOrDefault retunerar en default(T)    om inget objekt hittas = inget zero nullreference
+                Booking oldBooking = db.Bookings.Find(booking.BookingId); //retunerar null om inget hittas
 
                 //Om bokningen lagt till fler gäster på bokningen så kollar GetSumOfPers ifall de får plats på den angivna tiden
                 if (oldBooking == null || (GetSumOfPers(oldBooking) > availableSeats))
                 {
                     return false;
                 }
+                //uppdaterar enbart dessa parametrar och inte ID
+                oldBooking.Email= booking.Email;
+                MakeFirstCapital(booking.Email);
+                
+                oldBooking.PartySize = booking.PartySize;
+                oldBooking.PhoneNumber= booking.PhoneNumber;
+                oldBooking.BookingDate = booking.BookingDate;
 
-                oldBooking = booking;
+                db.Update(booking);
                 db.SaveChanges();
                 return true;
             }
@@ -105,17 +112,30 @@ namespace ProjectASParagus.Services
             }
         }
 
-        public Booking GetBooking(int id)
+        public Booking GetBooking(int bookedUserId)
         {
             try
             {
-                return db.Bookings.Find(id);
+                return db.Bookings.Find(bookedUserId);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error in BookingService. GetBooking, could not find: {id} \n {e.Message}");
+                Console.WriteLine($"Error in BookingService. GetBooking, could not find: {bookedUserId} \n {e.Message}");
                 return null;
             }
+        }
+        
+        private string MakeFirstCapital(string email)
+        {
+            if(email == null || email == string.Empty)
+            {
+                return email;
+            }
+
+            string firstCapitalized = email.Substring(0,1).ToUpper(); //tar första bokstaven, gör den till versal.
+            string capitalizedString = firstCapitalized + email.Substring(1); 
+
+            return capitalizedString;
         }
     }
 }
