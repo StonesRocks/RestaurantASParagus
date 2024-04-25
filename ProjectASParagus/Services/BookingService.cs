@@ -35,15 +35,13 @@ namespace ProjectASParagus.Services
         {
             //Linq funktioner för att kolla om restaurangen har plats på den angivna tiden. 
             int totalGuests = db.Bookings
-                              .Where(b => b.BookingDate == booking.BookingDate)
+                              .Where(b => b.BookingDate == booking.BookingDate) 
                               .Sum(b => b.PartySize);
 
             int sumOfBookings = totalGuests + booking.PartySize;
 
             return sumOfBookings; //Ger tillbaka hur många det är bokade den angivna tiden med den önskade bokningen inräknad.
         }
-
-        //problematic
         private int GiveAvailableSeats(DateTime time)
         {
             //kollar den angivna minuten +15min
@@ -51,30 +49,28 @@ namespace ProjectASParagus.Services
 
             //Räknar den angivna 
             int totalGuests = db.Bookings.Count(booking =>
-                                                booking.BookingDate >= time &&
+                                                booking.BookingDate >= time && 
                                                 booking.BookingDate < endTime);
 
-            int freeTables = availableSeats - totalGuests;
+            int freeTables = availableSeats - totalGuests; 
             return freeTables;
         }
 
         //Funktionen ger tillbaka lediga tider och tillgängliga tider.
-        public Dictionary<DateTime, int> GiveBookings(int month)
+        public Dictionary<DateTime,int> GiveBookings(DateTime date)
         {
-            Dictionary<DateTime, int> Capacity = new Dictionary<DateTime, int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
+            Dictionary<DateTime,int> Capacity = new Dictionary<DateTime,int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
+            DateTime firstSearchParam = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
+            DateTime secondSearchParam = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59);
 
-            DateTime currentTime = DateTime.Now;
-            DateTime givenMonth = new DateTime(currentTime.Year, month, 1); //nuvarande året och angivna månaden.
+            var dbResult = db.Bookings.Where(b => b.BookingDate >= firstSearchParam && b.BookingDate <= secondSearchParam).ToList();
 
-            DateTime startOfMonth = givenMonth.Date; //givna månaden
-            DateTime endOfMonth = givenMonth.AddMonths(1).AddDays(-1).Date; //-1 för att återgå till samma månads sista dag.
-
-            var bookingThisMonth = db.Bookings.Where(booking => booking.BookingDate >= 
-                                                    startOfMonth && booking.BookingDate <= endOfMonth);
-
-            foreach (var booking in bookingThisMonth)
+            foreach (var booking in dbResult)
             {
-                if(Capacity.ContainsKey(booking.BookingDate))
+                if (Capacity.ContainsKey(booking.BookingDate)){
+                    Capacity[booking.BookingDate] += booking.PartySize;
+                }
+                else
                 {
                     Capacity.Add(booking.BookingDate, booking.PartySize);
                 }

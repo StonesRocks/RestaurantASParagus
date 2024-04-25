@@ -15,9 +15,10 @@ namespace ProjectASParagus.Controllers
             this.bookingService = bookingService;
         }
 
-        [HttpPost("AddBooking")]
-        public ActionResult CreateBooking(Booking booking)
+        [HttpGet("AddBooking")]
+        public ActionResult CreateBooking()
         {
+            Booking booking = new Booking(1, 5, new DateTime(DateTime.Now.Year, 1, 1, DateTime.Now.Hour, 45, 0));
             if (booking == null)
             {
                 return BadRequest();
@@ -30,22 +31,36 @@ namespace ProjectASParagus.Controllers
         }
 
         //denna funktionen kallas när användaren har fyllt i bookings uppgifter
-        [HttpGet("ShowBookings/{month}")]
-        public ActionResult ShowBooking(int month)
+        [HttpGet("ShowBookings/{month?}/{day?}/{hour?}/{minute?}")]
+        public ActionResult ShowBooking(int? month = null, int? day = null, int? hour = null, int? minute = null)
         {
-            if (month <= 0 || month > 12)
+            if(month == null || month <= 0 || month >12)
             {
-                return BadRequest();
+                month = DateTime.Now.Month;
             }
-            //Felhantera datument ifall datumet inte ör tillgängligt.
-            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings(month);
+            int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, (int)month);
+            if (day == null || day <= 0 || day > daysInMonth)
+            {
+                day = DateTime.Now.Day;
+            }
+            if (hour == null || hour < 0 || hour > 23)
+            {
+                hour = DateTime.Now.Hour;
+            }
+            if (minute == null || minute < 0 || minute > 59)
+            {
+                minute = DateTime.Now.Minute;
+            }
+            int quarters = (int)minute/15;
+            minute = quarters * 15;
 
-            if (bookingDictionary.Count == 0)
-            {
-                Console.WriteLine("Currently no bookings");
-            }
+            DateTime cleanDate = new DateTime(DateTime.Now.Year, (int)month, (int)day, (int)hour, (int)minute, 0);
+
+            //Felhantera datument ifall datumet inte ör tillgängligt.
+            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings(cleanDate);
+
             return Ok(bookingDictionary);
-        }
+        }   
 
         [HttpDelete("DeleteBooking/{id}")]
         public ActionResult DeleteBooking(int id)
