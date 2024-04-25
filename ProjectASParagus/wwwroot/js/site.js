@@ -8,7 +8,8 @@ let userNameField = document.getElementById("userName");
 let userPassField = document.getElementById("userPass");
 let datePicker = document.getElementById("dateInput");
 let timePicker = document.getElementById("timeInput");
-let buttonDiv = document.getElementById("BookingButtonDiv");
+let dateDiv = document.getElementById("BookingButtonDiv");
+let timeDiv = document.getElementById("TimeBookingButtonDiv");
 let setMonth = document.getElementById("SelectedMonth");
 let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 let url = window.location.href;
@@ -87,13 +88,13 @@ function AdminMenu() {
 }
 
 function DaySetup() {
-    buttonDiv.innerHTML = "";
+    dateDiv.innerHTML = "";
     for (let day = 0; day < 7; day++) {
         let label = document.createElement("label");
         label.innerHTML = daysOfWeek[day];
         label.style.gridColumn = `${day + 1}`;
         label.style.gridRow = "1";
-        buttonDiv.appendChild(label);
+        dateDiv.appendChild(label);
     }
 
     let currentDate = GetDate(datePicker.value);
@@ -116,24 +117,23 @@ function DaySetup() {
         button.style.gridColumn = `${col+1}`;
         let row = Math.floor((firstcol + i) / 7) + 2;
         button.style.gridRow = `${row}`;
-        buttonDiv.appendChild(button);
+        button.style.backgroundColor = "red";
+        dateDiv.appendChild(button);
     }
     TimeSetup(6*60, 21*60, 15);
 }
 
 function TimeSetup(startTime = 6 * 60, stopTime = 21 * 60, interval = 60) {
-    let timeDiv = document.getElementById("TimeBookingButtonDiv");
-
-    let duration = stopTime - startTime;
-    let row = 1;
-    for (let i = 0; i < duration; i += interval) {
-        let label = document.createElement("label");
-        label.innerHTML = formatTime(startTime + i);
-        label.style.gridColumn = "0";
-        label.style.gridRow = `${row}`;
-        timeDiv.appendChild(label);
-        row++;
+    timeDiv.innerHTML = "";
+    let TimeSelect = document.createElement("select")
+    for (let i = startTime; i < stopTime; i += interval) {
+        let option = document.createElement("option");
+        option.innerHTML = formatTime(i);
+        option.style.backgroundColor = "red";
+        option.style.margin = "5px";
+        TimeSelect.appendChild(option);
     }
+    timeDiv.appendChild(TimeSelect);
 }
 
 function GetDate(dateHTML) {

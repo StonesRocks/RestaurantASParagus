@@ -57,29 +57,23 @@ namespace ProjectASParagus.Services
         }
 
         //Funktionen ger tillbaka lediga tider och tillgängliga tider.
-        public Dictionary<DateTime,int> GiveBookings()
+        public Dictionary<DateTime,int> GiveBookings(DateTime date)
         {
             Dictionary<DateTime,int> Capacity = new Dictionary<DateTime,int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
-            
-            DateTime currentTime = DateTime.Now; // nuvarande tiden
-            DateTime firstDayOfNextMonth = currentTime.AddMonths(1); //för att kunna visa tider mellan just nu och till och med nästa månad första dagen
+            DateTime firstSearchParam = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
+            DateTime secondSearchParam = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59);
 
+            var dbResult = db.Bookings.Where(b => b.BookingDate >= firstSearchParam && b.BookingDate <= secondSearchParam).ToList();
 
-            //loopar igen om varje dag och sen lägger till en dag i slutet, som en vanlig for i loop fast med datum
-            //loopar igenom den nuvarande datumet till och med nästa månad
-            for (DateTime date = currentTime.Date; date <= firstDayOfNextMonth; date = date.AddDays(1))
+            foreach (var booking in dbResult)
             {
-                for (DateTime time = date.Date.AddHours(10); //loopar igenom tider med start på 10:00
-                     time < date.Date.AddHours(17);          //till och med 17:00
-                     time = time.Date.AddMinutes(15))        //var 15e minut
+                if (Capacity.ContainsKey(booking.BookingDate)){
+                    Capacity[booking.BookingDate] += booking.PartySize;
+                }
+                else
                 {
-                    int FreeTables = GiveAvailableSeats(time);
-
-                    if (FreeTables >= availableSeats)
-                    {
-                        Capacity.Add(time, FreeTables);
-                    }
-                }    
+                    Capacity.Add(booking.BookingDate, booking.PartySize);
+                }
             }
             return Capacity;
         }
