@@ -30,10 +30,15 @@ namespace ProjectASParagus.Controllers
         }
 
         //denna funktionen kallas när användaren har fyllt i bookings uppgifter
-        [HttpGet("ShowBookings")]
-        public ActionResult ShowBooking(Booking booking)
+        [HttpGet("ShowBookings/{month}")]
+        public ActionResult ShowBooking(int month)
         {
-            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings(booking);
+            if(month <= 0 || month >12)
+            {
+
+            }
+            //Felhantera datument ifall datumet inte ör tillgängligt.
+            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings();
 
             if (bookingDictionary.Count == 0) //inga tillgängliga tider att boka
             {

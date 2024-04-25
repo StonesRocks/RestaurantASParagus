@@ -1,4 +1,5 @@
-﻿using ProjectASParagus.Objects;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using ProjectASParagus.Objects;
 
 namespace ProjectASParagus.Services
 {
@@ -41,9 +42,22 @@ namespace ProjectASParagus.Services
 
             return sumOfBookings; //Ger tillbaka hur många det är bokade den angivna tiden med den önskade bokningen inräknad.
         }
+        private int GiveAvailableSeats(DateTime time)
+        {
+            //kollar den angivna minuten +15min
+            DateTime endTime = time.AddMinutes(15);
 
-        //Funktionen visar för användaren vilka tider som är tillgängliga!
-        public Dictionary<DateTime,int> GiveBookings(Booking booking)
+            //Räknar den angivna 
+            int totalGuests = db.Bookings.Count(booking =>
+                                                booking.BookingDate >= time && 
+                                                booking.BookingDate < endTime);
+
+            int freeTables = availableSeats - totalGuests; 
+            return freeTables;
+        }
+
+        //Funktionen ger tillbaka lediga tider och tillgängliga tider.
+        public Dictionary<DateTime,int> GiveBookings()
         {
             Dictionary<DateTime,int> Capacity = new Dictionary<DateTime,int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
             
@@ -59,9 +73,9 @@ namespace ProjectASParagus.Services
                      time < date.Date.AddHours(17);          //till och med 17:00
                      time = time.Date.AddMinutes(15))        //var 15e minut
                 {
-                    int FreeTables = availableSeats - GetSumOfPers(booking); //Räknar tillgängliga tider den aktuella tiden, sen lägger den till det som value i dictionaryn
+                    int FreeTables = GiveAvailableSeats(time);
 
-                    if (FreeTables >= booking.PartySize)
+                    if (FreeTables >= availableSeats)
                     {
                         Capacity.Add(time, FreeTables);
                     }
