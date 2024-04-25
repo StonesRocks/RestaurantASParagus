@@ -35,13 +35,15 @@ namespace ProjectASParagus.Services
         {
             //Linq funktioner för att kolla om restaurangen har plats på den angivna tiden. 
             int totalGuests = db.Bookings
-                              .Where(b => b.BookingDate == booking.BookingDate) 
+                              .Where(b => b.BookingDate == booking.BookingDate)
                               .Sum(b => b.PartySize);
 
             int sumOfBookings = totalGuests + booking.PartySize;
 
             return sumOfBookings; //Ger tillbaka hur många det är bokade den angivna tiden med den önskade bokningen inräknad.
         }
+
+        //problematic
         private int GiveAvailableSeats(DateTime time)
         {
             //kollar den angivna minuten +15min
@@ -49,37 +51,33 @@ namespace ProjectASParagus.Services
 
             //Räknar den angivna 
             int totalGuests = db.Bookings.Count(booking =>
-                                                booking.BookingDate >= time && 
+                                                booking.BookingDate >= time &&
                                                 booking.BookingDate < endTime);
 
-            int freeTables = availableSeats - totalGuests; 
+            int freeTables = availableSeats - totalGuests;
             return freeTables;
         }
 
         //Funktionen ger tillbaka lediga tider och tillgängliga tider.
-        public Dictionary<DateTime,int> GiveBookings()
+        public Dictionary<DateTime, int> GiveBookings(int month)
         {
-            Dictionary<DateTime,int> Capacity = new Dictionary<DateTime,int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
-            
-            DateTime currentTime = DateTime.Now; // nuvarande tiden
-            DateTime firstDayOfNextMonth = currentTime.AddMonths(1); //för att kunna visa tider mellan just nu och till och med nästa månad första dagen
+            Dictionary<DateTime, int> Capacity = new Dictionary<DateTime, int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
 
+            DateTime currentTime = DateTime.Now;
+            DateTime givenMonth = new DateTime(currentTime.Year, month, 1); //nuvarande året och angivna månaden.
 
-            //loopar igen om varje dag och sen lägger till en dag i slutet, som en vanlig for i loop fast med datum
-            //loopar igenom den nuvarande datumet till och med nästa månad
-            for (DateTime date = currentTime.Date; date <= firstDayOfNextMonth; date = date.AddDays(1))
+            DateTime startOfMonth = givenMonth.Date; //givna månaden
+            DateTime endOfMonth = givenMonth.AddMonths(1).AddDays(-1).Date; //-1 för att återgå till samma månads sista dag.
+
+            var bookingThisMonth = db.Bookings.Where(booking => booking.BookingDate >= 
+                                                    startOfMonth && booking.BookingDate <= endOfMonth);
+
+            foreach (var booking in bookingThisMonth)
             {
-                for (DateTime time = date.Date.AddHours(10); //loopar igenom tider med start på 10:00
-                     time < date.Date.AddHours(17);          //till och med 17:00
-                     time = time.Date.AddMinutes(15))        //var 15e minut
+                if(Capacity.ContainsKey(booking.BookingDate))
                 {
-                    int FreeTables = GiveAvailableSeats(time);
-
-                    if (FreeTables >= availableSeats)
-                    {
-                        Capacity.Add(time, FreeTables);
-                    }
-                }    
+                    Capacity.Add(booking.BookingDate, booking.PartySize);
+                }
             }
             return Capacity;
         }

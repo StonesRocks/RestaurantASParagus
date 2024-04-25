@@ -27,6 +27,7 @@ namespace ProjectASParagus.Services
             {
                 return null;
             }
+
             if (BCrypt.Net.BCrypt.Verify(userPass, user.Password))
             {
                 if (user.IsAdmin)
@@ -66,7 +67,6 @@ namespace ProjectASParagus.Services
             db.SaveChanges();
             return true;
         }
-
 
         public User GetUser(int id)
         {

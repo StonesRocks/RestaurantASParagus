@@ -33,19 +33,19 @@ namespace ProjectASParagus.Controllers
         [HttpGet("ShowBookings/{month}")]
         public ActionResult ShowBooking(int month)
         {
-            if(month <= 0 || month >12)
+            if (month <= 0 || month > 12)
             {
-
+                return BadRequest();
             }
             //Felhantera datument ifall datumet inte ör tillgängligt.
-            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings();
+            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings(month);
 
-            if (bookingDictionary.Count == 0) //inga tillgängliga tider att boka
+            if (bookingDictionary.Count == 0)
             {
-                return NotFound("There are currently no available bookings. Please try again later.");
+                Console.WriteLine("Currently no bookings");
             }
             return Ok(bookingDictionary);
-        }   
+        }
 
         [HttpDelete("DeleteBooking/{id}")]
         public ActionResult DeleteBooking(int id)
