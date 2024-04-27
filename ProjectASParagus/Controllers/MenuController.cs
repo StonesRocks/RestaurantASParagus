@@ -10,36 +10,24 @@ namespace ProjectASParagus.Controllers
     public class MenuController : ControllerBase
     {
         MenuService menuService;
+        public string FilePath;
         public MenuController(MenuService menuService)
         {
             this.menuService = menuService;
         }
 
-        /*
-        [HttpPost]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        
+
+        [HttpPost("AddImage")]
+        public async Task<IActionResult> UploadImage(IFormFile file) //parametern måste matcha med Name = "file" i frontend.
         {
-            // Ensure the file is an image
-            if (!file.ContentType.StartsWith("image/"))
+            if(file != null)
             {
-                return BadRequest("Only images are allowed");
+                FilePath = await menuService.AddImageToFiles(file);
+                return Ok();
             }
-
-            // Create a new filename for every upload to avoid name collisions
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var filePath = Path.Combine("ProjectASParagus/Images/", fileName);
-
-            // Save the file to the server
-            using (var stream = System.IO.File.Create(filePath))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            // Save the filePath to your database here
-
-            return Ok();
+            return BadRequest();
         }
-        */
 
         [HttpPost("AddMenuItem")]
         public ActionResult CreateMenuItem(MenuItem menuItem)
@@ -52,6 +40,7 @@ namespace ProjectASParagus.Controllers
             {
                 return Ok();
             }
+            Console.WriteLine("Wrong format when creating a menu.");
             return Conflict();
         }
 

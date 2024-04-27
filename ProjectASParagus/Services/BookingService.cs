@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.AspNetCore.Server.HttpSys;
+using Microsoft.EntityFrameworkCore.Query;
 using ProjectASParagus.Objects;
 
 namespace ProjectASParagus.Services
@@ -41,19 +42,6 @@ namespace ProjectASParagus.Services
             int sumOfBookings = totalGuests + booking.PartySize;
 
             return sumOfBookings; //Ger tillbaka hur många det är bokade den angivna tiden med den önskade bokningen inräknad.
-        }
-        private int GiveAvailableSeats(DateTime time)
-        {
-            //kollar den angivna minuten +15min
-            DateTime endTime = time.AddMinutes(15);
-
-            //Räknar den angivna 
-            int totalGuests = db.Bookings.Count(booking =>
-                                                booking.BookingDate >= time && 
-                                                booking.BookingDate < endTime);
-
-            int freeTables = availableSeats - totalGuests; 
-            return freeTables;
         }
 
         //Funktionen ger tillbaka lediga tider och tillgängliga tider.
@@ -101,10 +89,11 @@ namespace ProjectASParagus.Services
                 {
                     return false;
                 }
-                //uppdaterar enbart dessa parametrar och inte ID
-                oldBooking.Email= booking.Email;
-                MakeFirstCapital(booking.Email);
-                
+                if (CheckForEmailInDb(booking.Email)) //uppdaterar emailen om den inte redan existerar, sen formatterar den till storbokstav.
+                {
+                    oldBooking.Email= booking.Email;
+                    MakeFirstCapital(booking.Email);
+                }
                 oldBooking.PartySize = booking.PartySize;
                 oldBooking.PhoneNumber= booking.PhoneNumber;
                 oldBooking.BookingDate = booking.BookingDate;
@@ -133,17 +122,30 @@ namespace ProjectASParagus.Services
             }
         }
         
+        //sparar användares Email i samma format.
         private string MakeFirstCapital(string email)
         {
-            if(email == null || email == string.Empty)
+            if(string.IsNullOrEmpty(email))
             {
                 return email;
             }
-
-            string firstCapitalized = email.Substring(0,1).ToUpper(); //tar första bokstaven, gör den till versal.
-            string capitalizedString = firstCapitalized + email.Substring(1); 
+            
+            string firstCapitalized = email.Substring(0,1).ToUpper();
+            string restLower = email.Substring(1).ToLower();
+            string capitalizedString = firstCapitalized + restLower;
 
             return capitalizedString;
+        }
+
+        private bool CheckForEmailInDb (string email)
+        {
+            Booking booking= db.Bookings.Find(email);
+
+            if(booking.Email == email)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
