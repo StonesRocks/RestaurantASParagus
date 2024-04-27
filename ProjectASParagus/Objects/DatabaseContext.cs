@@ -13,7 +13,6 @@ namespace ProjectASParagus.Objects
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<User> Users { get; set; }
 
-
         //skapar index över BookingDate.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

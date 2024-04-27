@@ -15,11 +15,22 @@ namespace ProjectASParagus.Controllers
             this.userService = userService;
         }
 
+        [HttpPost("LoginUser")]
+        public ActionResult LoginUser(List<string> loginInfo)
+        {
+            User user = userService.LoginUser(loginInfo[0], loginInfo[1]);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
+
         [HttpGet("SetTestSubjects")]
         public ActionResult SetTestSubjects()
         {
             User user1 = new User(
-                "John", "bongcloud", "John@chess.com", "007", false
+                "admin", "admin", "Admin@admin.se", "0", true
                 );
             if (userService.CreateUser(user1))
             {
