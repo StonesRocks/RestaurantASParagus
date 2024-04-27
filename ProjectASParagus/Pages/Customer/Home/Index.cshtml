@@ -1,0 +1,110 @@
+﻿@page
+@model ProjectASParagus.Pages.Customer.Home.IndexModel
+<h1>Welcome to ASParagus</h1>
+<p>Find your favorite ASParagus based meal and book a table now</p>
+<a href="/Customer/Menu">View Menu</a>
+<a href="/Customer/Booking">Book a table</a>
+<a href="/Customer/Account">Account</a>
+<a href="/Customer/About">About us</a>
+<a href="/Customer/Contact">Contact us!</a>
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ASParagus - Home</title>
+    <!-- Add any necessary meta tags, stylesheets, or scripts here -->
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+    /* Adjust the transition duration */
+    .carousel-item {
+        transition: opacity 1s ease-in-out;
+    }
+</style>
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/Customer/Home">Home</a></li>
+                <li><a href="/Customer/Menu">Menu</a></li>
+                <li><a href="/Customer/Booking">Book a Table</a></li>
+                <li><a href="/Customer/About">About Us</a></li>
+                <li><a href="/Customer/Contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Carousel style images -->
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="/images/AltarOfRuus.png" alt="First slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/images/image.png" alt="Second slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/images/king.png" alt="Third slide">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <!-- End of Carousel -->
+
+
+        <h1>Welcome to ASParagus</h1>
+        <p>Indulge in our delicious ASParagus-based meals and experience culinary delight!</p>
+        <a href="/Customer/Menu">View Menu</a>
+        <a href="/Customer/Booking">Book a Table</a>
+    </main>
+
+
+    <footer>
+        <div>
+            <ul>
+                <li><a href="/Customer/About">About Us</a></li>
+                <li><a href="/Customer/Contact">Contact Us</a></li>
+                <li><a href="/Customer/Account">My Account</a></li>
+            </ul>
+        </div>
+        <div>
+            <!-- Add social media icons or links here -->
+            <p>Follow us on social media:</p>
+            <!-- Example social media icons -->
+            <a href="#"><img src="images/facebook.svg" alt="Facebook"></a>
+            <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
+            <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
+        </div>
+        <div>
+            <!-- Add contact information here -->
+            <p>Kontakta oss:</p>
+            <p>Rongvägen 11, 416 85 Göteborg</p>
+            <p>Telefon: 076 262 5431</p>
+            <p>E-mail: sparris@asparagus.com</p>
+        </div>
+    </footer>
+</body>
+</html>

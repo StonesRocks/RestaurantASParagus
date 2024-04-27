@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectASParagus.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateASParagusDb : Migration
+    public partial class AsparagusDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
