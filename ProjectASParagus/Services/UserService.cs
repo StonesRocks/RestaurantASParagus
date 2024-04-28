@@ -19,6 +19,12 @@ namespace ProjectASParagus.Services
             db.SaveChanges();
             return true;
         }
+        public bool CreateGuest(User user)
+        {
+            db.Users.Add(user);
+            db.SaveChanges();
+            return true;
+        }
 
         public User LoginUser(string userName, string userPass)
         {
@@ -30,7 +36,7 @@ namespace ProjectASParagus.Services
 
             if (BCrypt.Net.BCrypt.Verify(userPass, user.Password))
             {
-                if (user.IsAdmin)
+                if (user.userRole == User.Role.Admin)
                 {
                     return user;
                 }
@@ -62,7 +68,7 @@ namespace ProjectASParagus.Services
             oldUser.Email = user.Email;
             oldUser.Password = user.Password;
             oldUser.PhoneNumber = user.PhoneNumber;
-            oldUser.IsAdmin = user.IsAdmin;
+            oldUser.userRole = user.userRole;
 
             db.SaveChanges();
             return true;

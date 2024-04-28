@@ -16,7 +16,7 @@ let url = window.location.href;
 let adminUser = false;
 
 let loginButton = document.getElementById("loginButton");
-loginButton.addEventListener("click", Login);
+loginButton.addEventListener("click", callLoginUser);
 DaySetup();
 datePicker.addEventListener("change", function () {
     DaySetup();
@@ -24,7 +24,8 @@ datePicker.addEventListener("change", function () {
 
 userPassField.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
-        Login();
+        //Login();
+        callLoginUser();
     }
 });
 window.onload = function () {
@@ -35,7 +36,94 @@ window.onload = function () {
 
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('dateInput').value = today;
+    createUserDiv();
 };
+
+function createUserDiv() {
+    let createDiv = document.getElementById("CreateUserDiv");
+
+    let form = document.createElement("form");
+    form.action = "api/User/CreateUser";
+    form.method = "POST";
+
+    let userName = document.createElement("input");
+    userName.type = "text";
+    userName.name = "userName";
+    userName.placeholder = "User Name";
+    userName.required = true;
+
+    let userPass = document.createElement("input");
+    userPass.type = "password";
+    userPass.name = "userPass";
+    userPass.placeholder = "Password";
+    userPass.required = true;
+
+    let email = document.createElement("input");
+    email.type = "email";
+    email.name = "email";
+    email.placeholder = "Email";
+    email.required = true;
+
+    let phoneNumber = document.createElement("input");
+    phoneNumber.type = "tel";
+    phoneNumber.name = "phoneNumber";
+    phoneNumber.placeholder = "Phone Number";
+    phoneNumber.required = true;
+
+    let submit = document.createElement("input");
+    submit.type = "submit";
+    submit.value = "Submit";
+
+    let userRole = document.createElement("select");
+    let option1 = document.createElement("option");
+    option1.value = "Admin";
+    option1.innerHTML = "Admin";
+    let option2 = document.createElement("option");
+    option2.value = "User";
+    option2.innerHTML = "User";
+    let option3 = document.createElement("option");
+    option3.value = "Guest";
+    option3.innerHTML = "Guest";
+
+    userRole.appendChild(option1);
+    userRole.appendChild(option2);
+    userRole.appendChild(option3);
+
+    form.appendChild(userName);
+    form.appendChild(userPass);
+    form.appendChild(email);
+    form.appendChild(phoneNumber);
+    form.appendChild(userRole);
+    form.appendChild(submit);
+
+    createDiv.appendChild(form);
+}
+
+function createUser() {
+
+}
+function callLoginUser() {
+    let data = { userName: userNameField.value, password: userPassField.value };
+    fetch(url + "api/User/LoginUser", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.log("Network response was not ok");
+        }
+        else {
+            console.log("Network response was ok");
+        }
+    })
+    .catch (error => {
+        console.error("There was a problem with the fetch operation:", error);
+    })
+}
+
 function Login() {
     let userName = userNameField.value;
     let userPass = userPassField.value;
@@ -52,21 +140,22 @@ function Login() {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(
-            [userName, userPass]
-        ),
-    })
-        .then((response) => {
-            console.log("status code:" + response.status);
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            else if (response.ok) {
-                adminUser = true;
-                console.log("Admin activated");
-                AdminMenu();
-            }
-        });
+        body: JSON.stringify([userName, userPass])
+            .then((response) => {
+                console.log("status code:" + response.status);
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                else if (response.ok) {
+                    adminUser = true;
+                    console.log("Admin activated");
+                    AdminMenu();
+                }
+            })
+            .catch((error) => {
+
+            })
+    });
 }
 
 function AdminMenu() {
@@ -169,4 +258,26 @@ function formatTime(minutes) {
     return `${formattedHours}:${formattedMins}`;
 }
 
+function SetGuestPass(number) {
+    let tempPass = CryptoJS.SHA256(number);
+    sessionStorage.setItem("GuestPass", `${tempPass}`);
+}
 
+function GetGuestPass() {
+    let tempPass = sessionStorage.getItem("GuestPass");
+    return tempPass;
+}
+
+
+
+function User(userName, email, phoneNumber) {
+    this.userName
+    this.email
+    this.phoneNumber
+}
+
+function Booking(User, PartySize, BookingDate) {
+    this.User = User;
+    this.PartySize = PartySize;
+    this.Date = BookingDate;
+}

@@ -26,17 +26,11 @@ namespace ProjectASParagus.Controllers
             return Ok(user);
         }
 
-        [HttpGet("SetTestSubjects")]
-        public ActionResult SetTestSubjects()
+        [HttpGet("sessionToken")]
+        public ActionResult GetSessionToken()
         {
-            User user1 = new User(
-                "admin", "admin", "Admin@admin.se", "0", true
-                );
-            if (userService.CreateUser(user1))
-            {
-                return Ok();
-            }
-            return Conflict();
+            
+            return Ok();
         }
 
         [HttpGet("GetAllUsers")]
@@ -45,7 +39,7 @@ namespace ProjectASParagus.Controllers
             return userService.GetAllUsers();
         }
 
-        [HttpPost("AddUser")]
+        [HttpPost("AddUserAccount")]
         public ActionResult CreateUser(User user)
         {
             if (user == null)
@@ -53,6 +47,20 @@ namespace ProjectASParagus.Controllers
                 return BadRequest();
             }
             if (userService.CreateUser(user))
+            {
+                return Ok();
+            }
+            return Conflict();
+        }
+
+        [HttpPost("AddGuestAccount")]
+        public ActionResult CreateGuest(User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            if (userService.CreateGuest(user))
             {
                 return Ok();
             }

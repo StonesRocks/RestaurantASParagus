@@ -97,6 +97,9 @@ namespace ProjectASParagus.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime>("Expiration")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)");
 
@@ -105,6 +108,10 @@ namespace ProjectASParagus.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SessionToken")
                         .IsRequired()
                         .HasColumnType("longtext");
 
