@@ -15,6 +15,7 @@ let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 let url = window.location.href;
 let adminUser = false;
 let ActiveUser = null;
+let currentSessionToken = null;
 
 let loginButton = document.getElementById("loginButton");
 loginButton.addEventListener("click", callLoginUser);
@@ -38,42 +39,39 @@ window.onload = function () {
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('dateInput').value = today;
     createUserDiv();
-    /*
-    let token = GetSessionToken();
-    if (token != null) {
+    let currentSessionToken = GetSessionToken();
+    console.log(currentSessionToken);
+    if (currentSessionToken != null && currentSessionToken.value != undefined) {
         fetch(url + "api/User/ValidateSessionToken", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(token)
-        })
-            .then(response => {
-                if (response.ok) {
-                    let jsonResponse = response.json();
-                    console.log(jsonResponse);
-                    console.log("Network response was ok");
-                    return jsonResponse;
-                }
-                else {
-                    console.log("Network response was not ok");
-                }
-            })
-            .then(jsonResponse => {
-                ActiveUser = jsonResponse;
-                console.log("Active User: " + ActiveUser)
-                console.log("JSON: " + jsonResponse);
-                if (jsonResponse.userRole === "Admin") {
-                    adminUser = true;
-                    AdminMenu();
-                }
-            })
-            .catch(error => {
-                console.error("There was a problem with the fetch operation:", error);
-            })
-    };
-    */
+            body: JSON.stringify({ sessionToken: currentSessionToken })
+        }).then(response => {
+            return response.json();
+        }).then(jsonResponse => {
+            ActiveUser = jsonResponse;
+        }).catch(error => {
+            console.error("There was a problem with the fetch operation:", error);
+        });
+    }
 }
+
+function generateSessionToken() {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let token = '';
+    let length = 256;
+    for (let i = 0; i < length; i++) {
+        // Choose a random character from the charset
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        token += charset.charAt(randomIndex);
+    }
+
+    return token;
+}
+
+
 
 function createUserDiv() {
     let createDiv = document.getElementById("CreateUserDiv");
@@ -187,9 +185,25 @@ function callLoginUser() {
                 adminUser = true;
                 AdminMenu();
             }
+            let token = generateSessionToken();
+            console.log("Generated token: " + token);
+            ActiveUser.SessionToken = token;
+            console.log("Active user token:  " + ActiveUser.SessionToken)
+            SetSessionToken(ActiveUser.SessionToken);
+            UpdateUser(ActiveUser);
         })
     .catch (error => {
         console.error("There was a problem with the fetch operation:", error);
+    })
+}
+
+function UpdateUser(User) {
+    fetch(url + "api/User/UpdateUser", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(User)
     })
 }
 
@@ -326,14 +340,15 @@ function formatTime(minutes) {
     return `${formattedHours}:${formattedMins}`;
 }
 
-function SetSessionToken(number) {
-    let tempPass = CryptoJS.SHA256(number);
-    sessionStorage.setItem("sessionToken", `${tempPass}`);
+function SetSessionToken(token) {
+    console.log(token);
+    let jsonToken = JSON.stringify(token);
+    sessionStorage.setItem("sessionToken", jsonToken);
 }
 
 function GetSessionToken() {
-    let tempPass = sessionStorage.getItem("sessionToken");
-    return tempPass;
+    let token = sessionStorage.getItem("sessionToken");
+    return token;
 }
 
 
