@@ -38,9 +38,10 @@ window.onload = function () {
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('dateInput').value = today;
     createUserDiv();
+    /*
     let token = GetSessionToken();
     if (token != null) {
-        fetch(url+ "api/User/ValidateSessionToken", {
+        fetch(url + "api/User/ValidateSessionToken", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -68,9 +69,11 @@ window.onload = function () {
                 }
             })
             .catch(error => {
-                console.error("There was a problem with the fetch operation:", error);)
-    })
-};
+                console.error("There was a problem with the fetch operation:", error);
+            })
+    };
+    */
+}
 
 function createUserDiv() {
     let createDiv = document.getElementById("CreateUserDiv");
