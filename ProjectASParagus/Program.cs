@@ -13,7 +13,11 @@ namespace ProjectASParagus
 
             // Add services to the container.
             builder.Services.AddRazorPages();
-            builder.Services.AddControllers().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             builder.Services.AddTransient<UserService>();
             builder.Services.AddTransient<BookingService>();
             builder.Services.AddTransient<MenuService>();

@@ -10,6 +10,7 @@ namespace ProjectASParagus.Controllers
     public class UserController : ControllerBase
     {
         UserService userService;
+        public enum Role { Admin, User, Guest }
         public UserController(UserService userService)
         {
             this.userService = userService;
@@ -26,11 +27,14 @@ namespace ProjectASParagus.Controllers
             return Ok(user);
         }
 
-        [HttpGet("sessionToken")]
-        public ActionResult GetSessionToken()
+        [HttpPost("ValidateSessionToken")]
+        public ActionResult ValidateSessionToken(string sessionToken)
         {
-            
-            return Ok();
+            if (userService.GetAccount(sessionToken) == null)
+            {
+                return NotFound();
+            }
+            return Ok(userService.GetAccount(sessionToken));
         }
 
         [HttpGet("GetAllUsers")]
@@ -54,13 +58,13 @@ namespace ProjectASParagus.Controllers
         }
 
         [HttpPost("AddGuestAccount")]
-        public ActionResult CreateGuest(User user)
+        public ActionResult CreateGuest(string sessionToken, DateTime? expirationDate)
         {
-            if (user == null)
+            if (sessionToken == null)
             {
                 return BadRequest();
             }
-            if (userService.CreateGuest(user))
+            if (userService.CreateGuest(sessionToken, expirationDate))
             {
                 return Ok();
             }

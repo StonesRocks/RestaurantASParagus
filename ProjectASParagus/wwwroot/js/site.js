@@ -14,6 +14,7 @@ let setMonth = document.getElementById("SelectedMonth");
 let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 let url = window.location.href;
 let adminUser = false;
+let ActiveUser = null;
 
 let loginButton = document.getElementById("loginButton");
 loginButton.addEventListener("click", callLoginUser);
@@ -37,14 +38,44 @@ window.onload = function () {
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('dateInput').value = today;
     createUserDiv();
+    let token = GetSessionToken();
+    if (token != null) {
+        fetch(url+ "api/User/ValidateSessionToken", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(token)
+        })
+            .then(response => {
+                if (response.ok) {
+                    let jsonResponse = response.json();
+                    console.log(jsonResponse);
+                    console.log("Network response was ok");
+                    return jsonResponse;
+                }
+                else {
+                    console.log("Network response was not ok");
+                }
+            })
+            .then(jsonResponse => {
+                ActiveUser = jsonResponse;
+                console.log("Active User: " + ActiveUser)
+                console.log("JSON: " + jsonResponse);
+                if (jsonResponse.userRole === "Admin") {
+                    adminUser = true;
+                    AdminMenu();
+                }
+            })
+            .catch(error => {
+                console.error("There was a problem with the fetch operation:", error);)
+    })
 };
 
 function createUserDiv() {
     let createDiv = document.getElementById("CreateUserDiv");
 
     let form = document.createElement("form");
-    form.action = "api/User/CreateUser";
-    form.method = "POST";
 
     let userName = document.createElement("input");
     userName.type = "text";
@@ -70,10 +101,7 @@ function createUserDiv() {
     phoneNumber.placeholder = "Phone Number";
     phoneNumber.required = true;
 
-    let submit = document.createElement("input");
-    submit.type = "submit";
-    submit.value = "Submit";
-
+    let roleEnum = ["Admin", "User", "Guest"];
     let userRole = document.createElement("select");
     let option1 = document.createElement("option");
     option1.value = "Admin";
@@ -85,9 +113,35 @@ function createUserDiv() {
     option3.value = "Guest";
     option3.innerHTML = "Guest";
 
-    userRole.appendChild(option1);
+    let submit = document.createElement("input");
+    submit.type = "submit";
+    submit.value = "Submit";
+
+    console.log(url);
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        let formData = {
+            userName: userName.value,
+            userPass: userPass.value,
+            email: email.value,
+            phoneNumber: phoneNumber.value,
+            userRole: roleEnum[userRole.selectedIndex]
+        };
+        let jsonData = JSON.stringify(formData);
+        console.log(jsonData);
+        fetch(url + "api/User/AddUserAccount", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: jsonData
+        })
+    });
+
     userRole.appendChild(option2);
     userRole.appendChild(option3);
+    userRole.appendChild(option1);
 
     form.appendChild(userName);
     form.appendChild(userPass);
@@ -103,7 +157,7 @@ function createUser() {
 
 }
 function callLoginUser() {
-    let data = { userName: userNameField.value, password: userPassField.value };
+    let data = [userNameField.value, userPassField.value];
     fetch(url + "api/User/LoginUser", {
         method: "POST",
         headers: {
@@ -112,13 +166,25 @@ function callLoginUser() {
         body: JSON.stringify(data)
     })
     .then(response => {
-        if (!response.ok) {
-            console.log("Network response was not ok");
+        if (response.ok) {
+            let jsonResponse = response.json();
+            console.log(jsonResponse);
+            console.log("Network response was ok");
+            return jsonResponse;
         }
         else {
-            console.log("Network response was ok");
+            console.log("Network response was not ok");
         }
     })
+        .then(jsonResponse => {
+            ActiveUser = jsonResponse;
+            console.log("Active User: " + ActiveUser)
+            console.log("JSON: " + jsonResponse);
+            if (jsonResponse.userRole === "Admin") {
+                adminUser = true;
+                AdminMenu();
+            }
+        })
     .catch (error => {
         console.error("There was a problem with the fetch operation:", error);
     })
@@ -171,8 +237,7 @@ function AdminMenu() {
         menuDiv.style.visibility = "visible";
         userDiv.style.visibility = "visible";
 
-        welcome.innerHTML = 'Welcome ${test}';
-        
+        welcome.innerHTML = `Welcome ${ActiveUser.userName}`;
     }
 }
 
@@ -258,13 +323,13 @@ function formatTime(minutes) {
     return `${formattedHours}:${formattedMins}`;
 }
 
-function SetGuestPass(number) {
+function SetSessionToken(number) {
     let tempPass = CryptoJS.SHA256(number);
-    sessionStorage.setItem("GuestPass", `${tempPass}`);
+    sessionStorage.setItem("sessionToken", `${tempPass}`);
 }
 
-function GetGuestPass() {
-    let tempPass = sessionStorage.getItem("GuestPass");
+function GetSessionToken() {
+    let tempPass = sessionStorage.getItem("sessionToken");
     return tempPass;
 }
 

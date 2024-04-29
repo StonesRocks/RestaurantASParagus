@@ -93,31 +93,30 @@ namespace ProjectASParagus.Migrations
                     b.Property<int?>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Expiration")
+                    b.Property<DateTime?>("Expiration")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("SessionToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("phoneNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<string>("userName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("userPass")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("userRole")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId");
 
