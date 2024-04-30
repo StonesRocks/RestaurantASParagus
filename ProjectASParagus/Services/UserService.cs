@@ -26,18 +26,18 @@ namespace ProjectASParagus.Services
             {
                 expirationDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 7);
             }
-            User user = db.Users.FirstOrDefault(u => u.Expiration < DateTime.Now);
+            User user = db.Users.FirstOrDefault(u => u.expiration < DateTime.Now);
             if (user != null)
             {
                 //found old user
                 user.Reset();
-                user.Expiration = expirationDate;
-                user.SessionToken = sessionToken;
+                user.expiration = expirationDate;
+                user.sessionToken = sessionToken;
             }
             //create new user
             user = new User();
-            user.Expiration = expirationDate;
-            user.SessionToken = sessionToken;
+            user.expiration = expirationDate;
+            user.sessionToken = sessionToken;
 
             db.Users.Add(user);
             db.SaveChanges();
@@ -46,11 +46,8 @@ namespace ProjectASParagus.Services
 
         public User GetAccount(string sessionToken)
         {
-            User user = db.Users.FirstOrDefault(u => u.SessionToken == sessionToken);
-            if (user != null)
-            {
-                return user;
-            }
+            sessionToken = sessionToken.Replace("\"", "");
+            User user = db.Users.FirstOrDefault(u => u.sessionToken == sessionToken);
             return user;
         }
 
@@ -88,13 +85,12 @@ namespace ProjectASParagus.Services
             {
                 return false;
             }
-
-            oldUser.userName = user.userName;
-            oldUser.email = user.email;
-            oldUser.userPass = user.userPass;
-            oldUser.phoneNumber = user.phoneNumber;
-            oldUser.userRole = user.userRole;
-
+            var properties = typeof(User).GetProperties();
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(user);
+                property.SetValue(oldUser, value);
+            }
             db.SaveChanges();
             return true;
         }

@@ -6,6 +6,7 @@
 
 let userNameField = document.getElementById("userName");
 let userPassField = document.getElementById("userPass");
+let statusField = document.getElementById("StatusMessage");
 let datePicker = document.getElementById("dateInput");
 let timePicker = document.getElementById("timeInput");
 let dateDiv = document.getElementById("BookingButtonDiv");
@@ -39,26 +40,38 @@ window.onload = function () {
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('dateInput').value = today;
     createUserDiv();
+    GetSession();
+}
+
+function GetSession() {
     let currentSessionToken = GetSessionToken();
-    console.log(currentSessionToken);
-    if (currentSessionToken != null && currentSessionToken.value != undefined) {
+    console.log("Token found: " + currentSessionToken);
+    if (currentSessionToken != undefined) {
+        //console.log(JSON.stringify(currentSessionToken))
         fetch(url + "api/User/ValidateSessionToken", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ sessionToken: currentSessionToken })
+            body: JSON.stringify(currentSessionToken)
         }).then(response => {
             return response.json();
         }).then(jsonResponse => {
             ActiveUser = jsonResponse;
+            console.log("Active User: " + ActiveUser)
+            if (ActiveUser.userRole === "Admin") {
+                adminUser = true;
+                AdminMenu();
+            }
+            generateSession();
         }).catch(error => {
-            console.error("There was a problem with the fetch operation:", error);
+            console.error("No active token found");
         });
     }
 }
 
-function generateSessionToken() {
+
+function generateSession() {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let token = '';
     let length = 256;
@@ -67,8 +80,11 @@ function generateSessionToken() {
         const randomIndex = Math.floor(Math.random() * charset.length);
         token += charset.charAt(randomIndex);
     }
-
-    return token;
+    console.log("Generated token: " + token);
+    ActiveUser.sessionToken = token;
+    console.log("Active user token:  " + ActiveUser.sessionToken)
+    SetSessionToken(ActiveUser.sessionToken);
+    UpdateUser(ActiveUser);
 }
 
 
@@ -158,6 +174,9 @@ function createUser() {
 
 }
 function callLoginUser() {
+    if (ActiveUser != null) {
+
+    }
     let data = [userNameField.value, userPassField.value];
     fetch(url + "api/User/LoginUser", {
         method: "POST",
@@ -174,7 +193,9 @@ function callLoginUser() {
             return jsonResponse;
         }
         else {
-            console.log("Network response was not ok");
+            //console.log("Network response was not ok");
+            statusField.innerHTML = "Invalid username or password";
+            throw new Error("Network response was not ok");
         }
     })
         .then(jsonResponse => {
@@ -185,12 +206,7 @@ function callLoginUser() {
                 adminUser = true;
                 AdminMenu();
             }
-            let token = generateSessionToken();
-            console.log("Generated token: " + token);
-            ActiveUser.SessionToken = token;
-            console.log("Active user token:  " + ActiveUser.SessionToken)
-            SetSessionToken(ActiveUser.SessionToken);
-            UpdateUser(ActiveUser);
+            generateSession();
         })
     .catch (error => {
         console.error("There was a problem with the fetch operation:", error);
@@ -204,6 +220,14 @@ function UpdateUser(User) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(User)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("User updated");
+        }
+        else {
+            console.log("User not updated");
+        }
     })
 }
 

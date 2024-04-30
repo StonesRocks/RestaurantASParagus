@@ -14,8 +14,8 @@ namespace ProjectASParagus.Objects
         public string phoneNumber { get; set; }
         public Role userRole { get; set; }
         public enum Role { Admin, User, Guest }
-        public DateTime? Expiration { get; set; }
-        public string? SessionToken { get; set; }
+        public DateTime? expiration { get; set; }
+        public string? sessionToken { get; set; }
 
         //public Dictionary<DateTime,int> BookingLog { get; set; }
 
@@ -37,7 +37,7 @@ namespace ProjectASParagus.Objects
             email = "";
             phoneNumber = "";
             userRole = Role.Guest;
-            SessionToken = "";
+            sessionToken = "";
         }
     }
 }

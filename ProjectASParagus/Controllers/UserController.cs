@@ -28,7 +28,7 @@ namespace ProjectASParagus.Controllers
         }
 
         [HttpPost("ValidateSessionToken")]
-        public ActionResult ValidateSessionToken(string sessionToken)
+        public ActionResult ValidateSessionToken([FromBody]string sessionToken)
         {
             if (userService.GetAccount(sessionToken) == null)
             {
@@ -42,7 +42,19 @@ namespace ProjectASParagus.Controllers
         {
             return userService.GetAllUsers();
         }
+        /*
+            1. Use Postman POST request to https://localhost:[INSERT PORT]/api/User/AddUserAccount
+            2. Set body format to raw -> JSON and insert this into body:
 
+            {
+                "userName": "admin",
+                "userPass": "admin",
+                "email": "admin",
+                "phoneNumber": "1337",
+                "userRole": "Admin"
+            }
+
+        */
         [HttpPost("AddUserAccount")]
         public ActionResult CreateUser(User user)
         {
