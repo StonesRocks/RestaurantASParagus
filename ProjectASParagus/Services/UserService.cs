@@ -44,7 +44,7 @@ namespace ProjectASParagus.Services
             return true;
         }
 
-        public User GetAccount(string sessionToken)
+        public User GetAccountWithToken(string sessionToken)
         {
             sessionToken = sessionToken.Replace("\"", "");
             User user = db.Users.FirstOrDefault(u => u.sessionToken == sessionToken);
@@ -93,6 +93,28 @@ namespace ProjectASParagus.Services
             }
             db.SaveChanges();
             return true;
+        }
+
+        public List<User> FindUser(List<string> terms)
+        {
+            List<User> foundUsers = new List<User>();
+            foreach (string term in terms)
+            {
+                if (term == "" || term == null) { continue; }
+                List<User> users = db.Users.Where(u => u.userName.Contains(term) || u.email.Contains(term) || u.phoneNumber.Contains(term)).ToList();
+                foreach (User user in users)
+                {
+                    if (!foundUsers.Contains(user))
+                    {
+                        foundUsers.Add(user);
+                    }
+                }
+            }
+            if (foundUsers.Count == 0)
+            {
+                return null;
+            }
+            return foundUsers;
         }
 
         public User GetUser(int id)

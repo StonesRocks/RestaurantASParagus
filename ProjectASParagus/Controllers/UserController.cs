@@ -16,6 +16,14 @@ namespace ProjectASParagus.Controllers
             this.userService = userService;
         }
 
+        /*
+            Send a POST request to https://localhost:[INSERT PORT]/api/User/LoginUser
+            with the following format:
+                javascript:
+                    let data = [name, password]
+                JSON:
+                    ["name","password"]
+         */
         [HttpPost("LoginUser")]
         public ActionResult LoginUser(List<string> loginInfo)
         {
@@ -30,11 +38,11 @@ namespace ProjectASParagus.Controllers
         [HttpPost("ValidateSessionToken")]
         public ActionResult ValidateSessionToken([FromBody]string sessionToken)
         {
-            if (userService.GetAccount(sessionToken) == null)
+            if (userService.GetAccountWithToken(sessionToken) == null)
             {
                 return NotFound();
             }
-            return Ok(userService.GetAccount(sessionToken));
+            return Ok(userService.GetAccountWithToken(sessionToken));
         }
 
         [HttpGet("GetAllUsers")]
@@ -42,6 +50,18 @@ namespace ProjectASParagus.Controllers
         {
             return userService.GetAllUsers();
         }
+
+        [HttpPost("FindUser")]
+        public ActionResult FindUser(List<string> terms)
+        {
+            List<User> users = userService.FindUser(terms);
+            if (users == null)
+            {
+                return NotFound();
+            }
+            return Ok(users);
+        }
+
         /*
             1. Use Postman POST request to https://localhost:[INSERT PORT]/api/User/AddUserAccount
             2. Set body format to raw -> JSON and insert this into body:

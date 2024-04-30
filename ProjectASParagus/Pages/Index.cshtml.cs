@@ -12,6 +12,7 @@ namespace ProjectASParagus.Pages
         private readonly IHttpClientFactory httpClientFactory;
         UserService userService;
         public User user;
+        public List<User> users;
 
         public IndexModel(UserService userService)
         {
@@ -19,7 +20,7 @@ namespace ProjectASParagus.Pages
         }
         public void OnGet()
         {
-
+            users = userService.GetAllUsers();
         }
 
         public StatusCodeResult LoginUser(List<string> loginInfo)

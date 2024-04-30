@@ -19,8 +19,9 @@ let ActiveUser = null;
 let currentSessionToken = null;
 
 let loginButton = document.getElementById("loginButton");
-loginButton.addEventListener("click", callLoginUser);
+loginButton.addEventListener("click", LoginUser);
 DaySetup();
+
 datePicker.addEventListener("change", function () {
     DaySetup();
 });
@@ -28,7 +29,7 @@ datePicker.addEventListener("change", function () {
 userPassField.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
         //Login();
-        callLoginUser();
+        LoginUser();
     }
 });
 window.onload = function () {
@@ -41,6 +42,7 @@ window.onload = function () {
     document.getElementById('dateInput').value = today;
     createUserDiv();
     GetSession();
+    findUserDiv();
 }
 
 function GetSession() {
@@ -87,8 +89,6 @@ function generateSession() {
     UpdateUser(ActiveUser);
 }
 
-
-
 function createUserDiv() {
     let createDiv = document.getElementById("CreateUserDiv");
 
@@ -134,8 +134,6 @@ function createUserDiv() {
     submit.type = "submit";
     submit.value = "Submit";
 
-    console.log(url);
-
     form.addEventListener("submit", function(event) {
         event.preventDefault();
         let formData = {
@@ -169,11 +167,65 @@ function createUserDiv() {
 
     createDiv.appendChild(form);
 }
+function findUserDiv() {
+    let findUser = document.getElementById("UserListDiv");
 
-function createUser() {
+    let searchName = document.createElement("input");
+    searchName.type = "text";
+    searchName.name = "searchName";
+    searchName.placeholder = "Name";
+    let searchPhone = document.createElement("input");
+    searchPhone.type = "tel";
+    searchPhone.name = "searchPhone";
+    searchPhone.placeholder = "Phone"
+    let searchEmail = document.createElement("input");
+    searchEmail.type = "email";
+    searchEmail.name = "searchEmail";
+    searchEmail.placeholder = "Email";
+    findUser.appendChild(searchName);
+    findUser.appendChild(searchPhone);
+    findUser.appendChild(searchEmail);
 
+    let submit = document.createElement("input");
+    submit.type = "submit";
+    submit.value = "Submit";
+    findUser.appendChild(submit);
+
+    let selectUser = document.createElement("select");
+    findUser.appendChild(selectUser);
+
+    submit.addEventListener("click", function (event) {
+        event.preventDefault();
+        selectUser.innerHTML = "";
+        let data = [searchName.value, searchPhone.value, searchEmail.value]
+        let jsonData = JSON.stringify(data);
+        console.log(data);
+
+        fetch(url + "api/User/FindUser", {
+            method: "Post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: jsonData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+            })
+            .then(users => {
+                users.forEach(user => {
+                    let option = document.createElement("option");
+                    option.value = user.UserId;
+                    option.textContent = user.userName;
+                    selectUser.appendChild(option);
+                })
+            })
+    });
+
+    
 }
-function callLoginUser() {
+function LoginUser() {
     if (ActiveUser != null) {
 
     }
@@ -212,7 +264,6 @@ function callLoginUser() {
         console.error("There was a problem with the fetch operation:", error);
     })
 }
-
 function UpdateUser(User) {
     fetch(url + "api/User/UpdateUser", {
         method: "PUT",
@@ -229,40 +280,6 @@ function UpdateUser(User) {
             console.log("User not updated");
         }
     })
-}
-
-function Login() {
-    let userName = userNameField.value;
-    let userPass = userPassField.value;
-    if (userName === "" || userPass === "") {
-        alert("Please enter a username and password");
-        return;
-    }
-    console.log(
-        JSON.stringify([userName, userPass])
-    );
-    let apiURL = url + "api/User/LoginUser";
-    fetch(apiURL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify([userName, userPass])
-            .then((response) => {
-                console.log("status code:" + response.status);
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                else if (response.ok) {
-                    adminUser = true;
-                    console.log("Admin activated");
-                    AdminMenu();
-                }
-            })
-            .catch((error) => {
-
-            })
-    });
 }
 
 function AdminMenu() {
