@@ -10,11 +10,20 @@ namespace ProjectASParagus.Controllers
     public class UserController : ControllerBase
     {
         UserService userService;
+        public enum Role { Admin, User, Guest }
         public UserController(UserService userService)
         {
             this.userService = userService;
         }
 
+        /*
+            Send a POST request to https://localhost:[INSERT PORT]/api/User/LoginUser
+            with the following format:
+                javascript:
+                    let data = [name, password]
+                JSON:
+                    ["name","password"]
+         */
         [HttpPost("LoginUser")]
         public ActionResult LoginUser(List<string> loginInfo)
         {
@@ -26,17 +35,14 @@ namespace ProjectASParagus.Controllers
             return Ok(user);
         }
 
-        [HttpGet("SetTestSubjects")]
-        public ActionResult SetTestSubjects()
+        [HttpPost("ValidateSessionToken")]
+        public ActionResult ValidateSessionToken([FromBody]string sessionToken)
         {
-            User user1 = new User(
-                "admin", "admin", "Admin@admin.se", "0", true
-                );
-            if (userService.CreateUser(user1))
+            if (userService.GetAccountWithToken(sessionToken) == null)
             {
-                return Ok();
+                return NotFound();
             }
-            return Conflict();
+            return Ok(userService.GetAccountWithToken(sessionToken));
         }
 
         [HttpGet("GetAllUsers")]
@@ -45,7 +51,31 @@ namespace ProjectASParagus.Controllers
             return userService.GetAllUsers();
         }
 
-        [HttpPost("AddUser")]
+        [HttpPost("FindUser")]
+        public ActionResult FindUser(List<string> terms)
+        {
+            List<User> users = userService.FindUser(terms);
+            if (users == null)
+            {
+                return NotFound();
+            }
+            return Ok(users);
+        }
+
+        /*
+            1. Use Postman POST request to https://localhost:[INSERT PORT]/api/User/AddUserAccount
+            2. Set body format to raw -> JSON and insert this into body:
+
+            {
+                "userName": "admin",
+                "userPass": "admin",
+                "email": "admin",
+                "phoneNumber": "1337",
+                "userRole": "Admin"
+            }
+
+        */
+        [HttpPost("AddUserAccount")]
         public ActionResult CreateUser(User user)
         {
             if (user == null)
@@ -53,6 +83,20 @@ namespace ProjectASParagus.Controllers
                 return BadRequest();
             }
             if (userService.CreateUser(user))
+            {
+                return Ok();
+            }
+            return Conflict();
+        }
+
+        [HttpPost("AddGuestAccount")]
+        public ActionResult CreateGuest(string sessionToken, DateTime? expirationDate)
+        {
+            if (sessionToken == null)
+            {
+                return BadRequest();
+            }
+            if (userService.CreateGuest(sessionToken, expirationDate))
             {
                 return Ok();
             }

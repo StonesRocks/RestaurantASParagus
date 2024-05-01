@@ -6,6 +6,7 @@
 
 let userNameField = document.getElementById("userName");
 let userPassField = document.getElementById("userPass");
+let statusField = document.getElementById("StatusMessage");
 let datePicker = document.getElementById("dateInput");
 let timePicker = document.getElementById("timeInput");
 let dateDiv = document.getElementById("BookingButtonDiv");
@@ -14,17 +15,21 @@ let setMonth = document.getElementById("SelectedMonth");
 let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 let url = window.location.href;
 let adminUser = false;
+let ActiveUser = null;
+let currentSessionToken = null;
 
 let loginButton = document.getElementById("loginButton");
-loginButton.addEventListener("click", Login);
+loginButton.addEventListener("click", LoginUser);
 DaySetup();
+
 datePicker.addEventListener("change", function () {
     DaySetup();
 });
 
 userPassField.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
-        Login();
+        //Login();
+        LoginUser();
     }
 });
 window.onload = function () {
@@ -35,38 +40,246 @@ window.onload = function () {
 
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('dateInput').value = today;
-};
-function Login() {
-    let userName = userNameField.value;
-    let userPass = userPassField.value;
-    if (userName === "" || userPass === "") {
-        alert("Please enter a username and password");
-        return;
+    createUserDiv();
+    GetSession();
+    findUserDiv();
+}
+
+function GetSession() {
+    let currentSessionToken = GetSessionToken();
+    console.log("Token found: " + currentSessionToken);
+    if (currentSessionToken != undefined) {
+        //console.log(JSON.stringify(currentSessionToken))
+        fetch(url + "api/User/ValidateSessionToken", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(currentSessionToken)
+        }).then(response => {
+            return response.json();
+        }).then(jsonResponse => {
+            ActiveUser = jsonResponse;
+            console.log("Active User: " + ActiveUser)
+            if (ActiveUser.userRole === "Admin") {
+                adminUser = true;
+                AdminMenu();
+            }
+            generateSession();
+        }).catch(error => {
+            console.error("No active token found");
+        });
     }
-    console.log(
-        JSON.stringify([userName, userPass])
-    );
-    let apiURL = url + "api/User/LoginUser";
-    fetch(apiURL, {
+}
+
+
+function generateSession() {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let token = '';
+    let length = 256;
+    for (let i = 0; i < length; i++) {
+        // Choose a random character from the charset
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        token += charset.charAt(randomIndex);
+    }
+    console.log("Generated token: " + token);
+    ActiveUser.sessionToken = token;
+    console.log("Active user token:  " + ActiveUser.sessionToken)
+    SetSessionToken(ActiveUser.sessionToken);
+    UpdateUser(ActiveUser);
+}
+
+function createUserDiv() {
+    let createDiv = document.getElementById("CreateUserDiv");
+
+    let form = document.createElement("form");
+
+    let userName = document.createElement("input");
+    userName.type = "text";
+    userName.name = "userName";
+    userName.placeholder = "User Name";
+    userName.required = true;
+
+    let userPass = document.createElement("input");
+    userPass.type = "password";
+    userPass.name = "userPass";
+    userPass.placeholder = "Password";
+    userPass.required = true;
+
+    let email = document.createElement("input");
+    email.type = "email";
+    email.name = "email";
+    email.placeholder = "Email";
+    email.required = true;
+
+    let phoneNumber = document.createElement("input");
+    phoneNumber.type = "tel";
+    phoneNumber.name = "phoneNumber";
+    phoneNumber.placeholder = "Phone Number";
+    phoneNumber.required = true;
+
+    let roleEnum = ["Admin", "User", "Guest"];
+    let userRole = document.createElement("select");
+    let option1 = document.createElement("option");
+    option1.value = "Admin";
+    option1.innerHTML = "Admin";
+    let option2 = document.createElement("option");
+    option2.value = "User";
+    option2.innerHTML = "User";
+    let option3 = document.createElement("option");
+    option3.value = "Guest";
+    option3.innerHTML = "Guest";
+
+    let submit = document.createElement("input");
+    submit.type = "submit";
+    submit.value = "Submit";
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        let formData = {
+            userName: userName.value,
+            userPass: userPass.value,
+            email: email.value,
+            phoneNumber: phoneNumber.value,
+            userRole: roleEnum[userRole.selectedIndex]
+        };
+        let jsonData = JSON.stringify(formData);
+        console.log(jsonData);
+        fetch(url + "api/User/AddUserAccount", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: jsonData
+        })
+    });
+
+    userRole.appendChild(option2);
+    userRole.appendChild(option3);
+    userRole.appendChild(option1);
+
+    form.appendChild(userName);
+    form.appendChild(userPass);
+    form.appendChild(email);
+    form.appendChild(phoneNumber);
+    form.appendChild(userRole);
+    form.appendChild(submit);
+
+    createDiv.appendChild(form);
+}
+function findUserDiv() {
+    let findUser = document.getElementById("UserListDiv");
+
+    let searchName = document.createElement("input");
+    searchName.type = "text";
+    searchName.name = "searchName";
+    searchName.placeholder = "Name";
+    let searchPhone = document.createElement("input");
+    searchPhone.type = "tel";
+    searchPhone.name = "searchPhone";
+    searchPhone.placeholder = "Phone"
+    let searchEmail = document.createElement("input");
+    searchEmail.type = "email";
+    searchEmail.name = "searchEmail";
+    searchEmail.placeholder = "Email";
+    findUser.appendChild(searchName);
+    findUser.appendChild(searchPhone);
+    findUser.appendChild(searchEmail);
+
+    let submit = document.createElement("input");
+    submit.type = "submit";
+    submit.value = "Submit";
+    findUser.appendChild(submit);
+
+    let selectUser = document.createElement("select");
+    findUser.appendChild(selectUser);
+
+    submit.addEventListener("click", function (event) {
+        event.preventDefault();
+        selectUser.innerHTML = "";
+        let data = [searchName.value, searchPhone.value, searchEmail.value]
+        let jsonData = JSON.stringify(data);
+        console.log(data);
+
+        fetch(url + "api/User/FindUser", {
+            method: "Post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: jsonData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+            })
+            .then(users => {
+                users.forEach(user => {
+                    let option = document.createElement("option");
+                    option.value = user.UserId;
+                    option.textContent = user.userName;
+                    selectUser.appendChild(option);
+                })
+            })
+    });
+
+    
+}
+function LoginUser() {
+    if (ActiveUser != null) {
+
+    }
+    let data = [userNameField.value, userPassField.value];
+    fetch(url + "api/User/LoginUser", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(
-            [userName, userPass]
-        ),
+        body: JSON.stringify(data)
     })
-        .then((response) => {
-            console.log("status code:" + response.status);
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            else if (response.ok) {
+    .then(response => {
+        if (response.ok) {
+            let jsonResponse = response.json();
+            console.log(jsonResponse);
+            console.log("Network response was ok");
+            return jsonResponse;
+        }
+        else {
+            //console.log("Network response was not ok");
+            statusField.innerHTML = "Invalid username or password";
+            throw new Error("Network response was not ok");
+        }
+    })
+        .then(jsonResponse => {
+            ActiveUser = jsonResponse;
+            console.log("Active User: " + ActiveUser)
+            console.log("JSON: " + jsonResponse);
+            if (jsonResponse.userRole === "Admin") {
                 adminUser = true;
-                console.log("Admin activated");
                 AdminMenu();
             }
-        });
+            generateSession();
+        })
+    .catch (error => {
+        console.error("There was a problem with the fetch operation:", error);
+    })
+}
+function UpdateUser(User) {
+    fetch(url + "api/User/UpdateUser", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(User)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("User updated");
+        }
+        else {
+            console.log("User not updated");
+        }
+    })
 }
 
 function AdminMenu() {
@@ -82,8 +295,7 @@ function AdminMenu() {
         menuDiv.style.visibility = "visible";
         userDiv.style.visibility = "visible";
 
-        welcome.innerHTML = 'Welcome ${test}';
-        
+        welcome.innerHTML = `Welcome ${ActiveUser.userName}`;
     }
 }
 
@@ -169,4 +381,27 @@ function formatTime(minutes) {
     return `${formattedHours}:${formattedMins}`;
 }
 
+function SetSessionToken(token) {
+    console.log(token);
+    let jsonToken = JSON.stringify(token);
+    sessionStorage.setItem("sessionToken", jsonToken);
+}
 
+function GetSessionToken() {
+    let token = sessionStorage.getItem("sessionToken");
+    return token;
+}
+
+
+
+function User(userName, email, phoneNumber) {
+    this.userName
+    this.email
+    this.phoneNumber
+}
+
+function Booking(User, PartySize, BookingDate) {
+    this.User = User;
+    this.PartySize = PartySize;
+    this.Date = BookingDate;
+}

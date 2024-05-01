@@ -15,17 +15,13 @@ namespace ProjectASParagus.Controllers
             this.bookingService = bookingService;
         }
 
-        [HttpGet("AddBooking")]
-        public ActionResult CreateBooking()
+        [HttpPost("AddBooking")]
+        public ActionResult CreateBooking(User user)
         {
-            Booking booking = new Booking(1, 5, new DateTime(DateTime.Now.Year, 1, 1, DateTime.Now.Hour, 45, 0));
-            if (booking == null)
+
+            if ( user == null)
             {
                 return BadRequest();
-            }
-            if (bookingService.CreateBooking(booking))
-            {
-                return Ok();
             }
             return Conflict();
         }

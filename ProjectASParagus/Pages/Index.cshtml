@@ -18,7 +18,7 @@
     <p id="StatusMessage"></p>
     </div>
 </div>
-<div class="text-center" id="BookingDiv" style="visibility: visible">
+<div class="text-center" id="BookingDiv" style="visibility: hidden">
     <h1>Booking</h1>
     <input type="date" id="dateInput"/>
     <input type="time" id="timeInput"/>
@@ -37,16 +37,35 @@
     </div>
 </div>
 
-<div class="text-center" id="MenuDiv" style="visibility: visible">
+<div class="text-center" id="MenuDiv" style="visibility: hidden">
     <h1>Menu</h1>
     <div class="DivBorder">
 
     </div>
 </div>
 
-<div class="text-center" id="UserDiv" style="visibility: visible">
+<div class="text-center" id="UserDiv" style="visibility: hidden">
     <h1>User</h1>
-    <div class="DivBorder">
+    <div class="DivBorder" id="CreateUserDiv">
+
+    </div>
+    <div class="DivBorder" id="UserListDiv">
+        <!--
+        <select>
+        @foreach (Objects.User user in Model.users)
+        {
+                    <option>
+                        <span>ID: @user.UserId,</span>
+                        <span>Name: @user.userName,</span>
+                        <span>Phone Number: @user.phoneNumber,</span>
+                        <span>Email: @user.email,</span>
+                        <span>Role: @user.userRole</span>
+                    </option>
+        }
+        </select>
+        -->
 
     </div>
 </div>
+
+<script src=""/>
