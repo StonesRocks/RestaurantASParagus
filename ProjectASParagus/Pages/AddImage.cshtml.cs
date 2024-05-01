@@ -7,6 +7,8 @@ namespace ProjectASParagus.Pages
     public class AddImageModel : PageModel
     {
         public string FilePath = string.Empty;
+        //public string Message = string.Empty;
+
         private readonly ILogger<AddImageModel> logger;
         MenuService menuService;
 
@@ -19,14 +21,16 @@ namespace ProjectASParagus.Pages
         public void OnGet()
         {
         }
-
-
-
         public async void OnPost(IFormFile file) //parametern måste matcha med Name = "file" i frontend.
         {
             if(file != null) 
             {
                 FilePath = await menuService.AddImageToFiles(file);
+                //Message = "Image Successfully added";
+            }
+            else
+            {
+                //Message = "You can only add images.";
             }
         }
     }

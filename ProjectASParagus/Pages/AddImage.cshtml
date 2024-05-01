@@ -8,17 +8,15 @@
         <form method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label"> Upload Image</label>
-                <input type="file" name="file" class="form-control" />
+                <input id="fileInput" type="file" name="file" class="form-control" />
             </div>
             <div class="mb-3">
-                <button type="submit" class="btn btn-primary">Upload</button>
+                <button type="submit" onclick="UploadImage()" class="btn btn-primary">Upload</button>
             </div>
         </form>
     </div>
 </div>
-<div>
-    @if(!string.IsNullOrWhiteSpace(Model.FilePath))
-    {
-        <img src="@Model.FilePath" alt="Alternate Text" />
-    }
-</div>
+@if(!string.IsNullOrWhiteSpace(Model.FilePath))
+{
+    <img src="@Model.FilePath" alt="Something went wrong" />
+}
