@@ -5,33 +5,55 @@
     ViewData["Title"] = "Edit Menu";
 }
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 <div class="container col-8 div-primary">
     <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Menu name</label>
-        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Hamburgers with..." required>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="menuItem.productName" placeholder="Hamburgers with..." required>
     </div>
     <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Price</label>
-            <input type="number" class="form-control" required min="0">
+            <input type="number" class="form-control" name="menuItem.price" required min="0">
     </div>
     <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">Description of the dish</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="menuItem.description" rows="3" required></textarea>
     </div>
     <div class="mb-3">
         <label class="form-label"> Upload Image</label>
-        <input id="fileInput" type="file" name="file" class="form-control" />
+            <input id="fileInput" type="file" name="file" class="form-control" accept="image/*" />
     </div>
     <div class="d-flex justify-content-center">
-    <button type="submit" class="btn btn-primary col-6">Submit</button>
+        <button type="submit" class="btn btn-primary col-6">Submit</button>
+    </div>
 </div>
 </form>
 
 <!--This displays that the item already exists using its id-->
-@if(Model.itemExists == true)
+@if(Model.itemExists)
 {
     <div class="container alert-danger py-3" role="alert">
         @Model.errorMessages
+    </div>
+}
+@if (TempData.ContainsKey("success") && (bool)TempData["success"])
+{
+    if (TempData.ContainsKey("successNoImage") && (bool)TempData["successNoImage"])
+    {
+        <div class="d-flex justify-content-center">
+            <p class="text-success">Menu successfully uploaded with no image.</p>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-center">
+            <p class="text-success">Menu successfully uploaded</p>
+        </div>
+    }
+}
+@if(TempData.ContainsKey("fail") && (bool)TempData["fail"])
+{
+    <div class="d-flex justify-content-center">
+        <p class="text-danger">Fail while trying to upload</p>
     </div>
 }

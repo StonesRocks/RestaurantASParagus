@@ -8,44 +8,66 @@ namespace ProjectASParagus.Pages
 {
     public class EditMenuModel : PageModel
     {
-        public List<string> ImagePaths { get; private set; }
-        DatabaseContext db;
         [BindProperty]
         public MenuItem menuItem { get; set; }
+        DatabaseContext db;
+        IWebHostEnvironment env;
 
-        //dessa används i cshtml
         public string errorMessages = "Item already added.";
-        //dessa används i cshtml
         public bool itemExists = false;
+        public bool success = false;
+        public bool successNoImage = false;
+        public bool fail = false;
+        public List<MenuItem> menuList = new List<MenuItem>();
 
-        public EditMenuModel(DatabaseContext db) 
+        public EditMenuModel(DatabaseContext db, IWebHostEnvironment env) 
         { 
+            this.env = env;
             this.db = db;
         }
 
         public void OnGet()
         {
+            menuList = db.MenuItems.ToList();
         }
 
-        public async Task<ActionResult> OnPost()
+        public async Task<ActionResult> OnPost(IFormFile file)
         {
-            if(!ModelState.IsValid)
+            if(menuItem.Description == null || menuItem.ProductName == null)
             {
-                return Page();
+                NotFound();
+                fail = true;
             }
-            if(menuItem == null)
+            itemExists = await db.MenuItems.AnyAsync(i => i.Description == menuItem.Description); //om den finns visa det i .cshtml
+
+            if(file != null)
             {
-                NotFound(); 
+                menuItem.ImageUrl = "MenuImages/" + file.FileName;
             }
-            itemExists = await db.MenuItems.AnyAsync(i => i.MenuItemId == menuItem.MenuItemId);
+            else
+            {
+                menuItem.ImageUrl = "Image missing";
+                successNoImage = true;
+                TempData["successNoImage"] = true;
 
-
+            }
+            
             menuItem.ProductName = CapitalizeMenuName(menuItem.ProductName);
             menuItem.Description = CapitalizeAndAppendPeriod(menuItem.Description);
-            
-            //sparar ner till databasen. sen tillbaka till samma sida fast som en ny sida.
-            db.Add(menuItem);
-            db.SaveChanges();
+            AddImageToFiles(file); //lägger till bilden i filsystemet om den inte finns.
+            try
+            {
+                db.Add(menuItem);
+                db.SaveChanges();
+                success = true;
+                TempData["success"] = true;
+            }
+            catch
+            {
+                fail = true;
+                TempData["fail"] = true;
+                await Console.Out.WriteLineAsync("Error occurred while saving to database.");
+            }
             return Redirect("/EditMenu");
         }
         //gör så att beskrivningen sparas med vokal och punkt i slutet.
@@ -64,6 +86,8 @@ namespace ProjectASParagus.Pages
             {
                 capitalized += ".";
             }
+            string rootpath = env.WebRootPath;
+
             return capitalized;
         }
         //Gör så att Meny namnet sparas ner med storbokastav till databasen.
@@ -79,6 +103,30 @@ namespace ProjectASParagus.Pages
                 capitalized = menuItemName;
             }
             return capitalized;
+        }
+
+
+        //lägger till bilder i filsystemet 
+        public async Task AddImageToFiles(IFormFile file)
+        {
+            if (file == null || !file.ContentType.StartsWith("image/"))
+            {
+                Console.WriteLine("The uploaded file is not an image.");
+                return;
+            }
+
+            var filepath = Path.Combine(env.ContentRootPath, @"wwwroot/MenuImages", file.FileName); 
+
+            if (System.IO.File.Exists(filepath)) //finns filen så läggs den inte till igen.
+            {
+                await Console.Out.WriteLineAsync("image already exists");
+                return;
+            }
+            using (FileStream stream = new FileStream(filepath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            Console.WriteLine("Image successfully added");
         }
     }
 }

@@ -20,5 +20,6 @@ namespace ProjectASParagus.Objects
             Description = description;
             ImageUrl = imageUrl;
         }
+        public MenuItem() { }
     }
 }
