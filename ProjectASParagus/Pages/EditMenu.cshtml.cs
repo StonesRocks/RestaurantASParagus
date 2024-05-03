@@ -18,7 +18,6 @@ namespace ProjectASParagus.Pages
         public bool success = false;
         public bool successNoImage = false;
         public bool fail = false;
-        public List<MenuItem> menuList = new List<MenuItem>();
 
         public EditMenuModel(DatabaseContext db, IWebHostEnvironment env) 
         { 
@@ -28,7 +27,6 @@ namespace ProjectASParagus.Pages
 
         public void OnGet()
         {
-            menuList = db.MenuItems.ToList();
         }
 
         public async Task<ActionResult> OnPost(IFormFile file)
