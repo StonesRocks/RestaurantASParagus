@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProjectASParagus.Objects
 {
@@ -8,8 +9,11 @@ namespace ProjectASParagus.Objects
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
+        [Required]
         public string userName { get; set; }
-        public string userPass { get; set; }    
+        public string userPass { get; set; }
+        [Required]
+        [EmailAddress]
         public string email { get; set; }
         public string phoneNumber { get; set; }
         public Role userRole { get; set; }
