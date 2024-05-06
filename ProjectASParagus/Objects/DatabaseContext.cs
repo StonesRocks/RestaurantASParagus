@@ -17,6 +17,8 @@ namespace ProjectASParagus.Objects
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Booking>().HasIndex(b => b.BookingDate);
+            modelBuilder.Entity<User>().HasIndex(b => b.email).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(b => b.userName).IsUnique();
         }
     }
 }

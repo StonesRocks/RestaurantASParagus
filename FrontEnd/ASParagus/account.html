@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Restaurant ASParagus</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/account.css">
+</head>
+
+<body>
+
+    <header>
+        <!-- Navigation bar -->
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="booking.html">Booking</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="account.html">Account</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="account-container">
+            <div id="buttons">
+                <button onclick="showSignUp()">Sign Up</button>
+                <button onclick="showLogIn()">Log In</button>
+            </div>
+            <div id="forms">
+                <form id="signup-form" style="display:none;" onsubmit="registerUser(event)">
+                    <div class="row">
+                        <input type="text" id="userName" placeholder="Username" required>
+                    </div>
+                    <div class="row">
+                        <input type="password" id="userPass" placeholder="Password" required>
+                    </div>
+                    <div class="row">
+                        <input type="email" id="email" placeholder="E-mail Address" required>
+                    </div>
+                    <div class="row">
+                        <input type="text" id="phoneNumber" placeholder="Phone Number" required>
+                    </div>
+                    <!-- User Role Selection -->
+                    <div class="row">
+                        <select id="userRole">
+                            <option value="User">User</option>
+                            <option value="Guest">Guest</option> <!-- Include this only if guests also need to register -->
+                        </select>
+                    </div>
+                    <button type="submit">Sign Up</button>
+                    <button type="button" onclick="hideForms()">Cancel</button>
+                </form>
+                
+                <form id="login-form" style="display:none;" onsubmit="loginUser(event)">
+                    <div class="row">
+                        <input type="text" id="loginUserName" placeholder="Username or Email" required>
+                    </div>
+                    <div class="row">
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+                    <button type="submit">Log In</button>
+                    <button type="button" onclick="hideForms()">Cancel</button>
+                </form>
+                
+                
+            </div>
+        </div>
+        
+    </main>
+
+    <footer>
+        <!-- Footer section -->
+        <p>&copy; ASParagus. All rights reserved.</p>
+    </footer>
+
+    
+</body>
+<script src="js/account.js"></script>
+</html>

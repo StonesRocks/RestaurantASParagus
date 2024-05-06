@@ -55,9 +55,9 @@ namespace ProjectASParagus.Controllers
         public ActionResult FindUser(List<string> terms)
         {
             List<User> users = userService.FindUser(terms);
-            if (users == null)
+            if (users == null || users.Count <= 0)
             {
-                return NotFound();
+                return BadRequest();
             }
             return Ok(users);
         }
@@ -126,12 +126,30 @@ namespace ProjectASParagus.Controllers
         [HttpGet("GetUser/{id}")]
         public ActionResult GetUser(int id)
         {
-            User user = userService.GetUser(id);
+            /*
+            string token = Request.Headers["Token"];
+            User user = userService.GetAccountWithToken(token);
             if (user == null)
             {
+                return Forbid();
+            }
+            if (user.userRole == Objects.User.Role.Admin)
+            {
+                User foundUser = userService.GetUser(id);
+                if (foundUser != null)
+                {
+                    return Ok(foundUser);
+                }
                 return NotFound();
             }
-            return Ok(user);
+            return Forbid();
+            */
+            User foundUser = userService.GetUser(id);
+            if (foundUser != null)
+            {
+                return Ok(foundUser);
+            }
+            return NotFound();
         }
     }
 }

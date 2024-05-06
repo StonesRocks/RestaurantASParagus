@@ -24,8 +24,22 @@ namespace ProjectASParagus
 
             string connectionString = builder.Configuration.GetConnectionString("mySqlConnectionString");
             builder.Services.AddDbContext<DatabaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-            
+
+            // CORS policy
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
+
             var app = builder.Build();
+
+            
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -39,6 +53,9 @@ namespace ProjectASParagus
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Apply CORS policy globally
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
 

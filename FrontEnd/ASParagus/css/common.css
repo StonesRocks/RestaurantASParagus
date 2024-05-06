@@ -1,0 +1,108 @@
+body {
+    background-color: #ffffff;
+    color: aliceblue;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: url('/images/asparagusCursor.cur'), auto;
+}
+
+
+
+/*
+@font-face {
+    font-family: 'Asparagus'; 
+    src: url('Fonts/Asparagus.otf'); 
+}
+
+body {
+    font-family: 'Asparagus', sans-serif; /}
+
+*/
+
+/* Apply the 'Asparagus' font with a fallback to a generic sans-serif font */
+
+
+/* common.css - Basic shared styles for the entire website */
+
+/* Reset margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: Arial, sans-serif; /* Basic font for readability */
+    background: #f4f4f4; /* Light grey background */
+    color: #333; /* Dark grey text for better contrast */
+}
+
+header, footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+}
+
+nav {
+    background: #555; /* Darker background for navbar */
+    color: white;
+    text-align: center;
+    padding: 0.5em 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline; /* Horizontal navigation links */
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+main {
+    margin: 20px; /* Space around main content */
+}
+
+section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px; /* Space between sections */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+footer {
+    font-size: 0.8em;
+    padding: 1em 0;
+}
+
+@media (max-width: 600px) {
+    nav ul li {
+        display: block; /* Stack nav links vertically on small screens */
+        margin: 0;
+        padding: 10px 0;
+    }
+
+    header, footer {
+        padding: 0.5em 0;
+    }
+
+    main {
+        margin: 10px;
+    }
+
+    section {
+        padding: 10px;
+    }
+}
+
+/* Additional helper classes for visibility or specific tweaks */
+.hidden {
+    display: none;
+}
