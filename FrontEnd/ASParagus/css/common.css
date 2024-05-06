@@ -2,7 +2,7 @@ body {
     background-color: #ffffff;
     color: aliceblue;
     font-family: 'Courier New', Courier, monospace;
-    cursor: url('/images/asparagusCursor.cur'), auto;
+    cursor: url(/images/asparagusCursor.cur), auto;
 }
 
 
