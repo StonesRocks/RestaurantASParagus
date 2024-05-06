@@ -126,6 +126,11 @@ namespace ProjectASParagus.Services
             }
         }
 
+        public List<MenuItem> GetAllMenuItems()
+        {
+            return db.MenuItems.ToList();
+        }
+
         public async Task<string> AddImageToFiles(IFormFile file)
         {
             if (file == null || !file.ContentType.StartsWith("image/"))

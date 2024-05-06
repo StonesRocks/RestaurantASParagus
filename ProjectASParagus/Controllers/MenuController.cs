@@ -60,5 +60,12 @@ namespace ProjectASParagus.Controllers
             }
             return Ok(menuItem);
         }
+
+        [HttpGet("GetMenuAPI")]
+        public ActionResult GetMenuAPI()
+        {
+            //menuService.GetAllMenuItems();
+            return Ok(menuService.GetAllMenuItems());
+        }
     }
 }

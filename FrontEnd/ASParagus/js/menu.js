@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Function to fetch menu items from the backend API
     function fetchMenuItems() {
-        fetch('/api/menu') // Assuming your backend API endpoint for menu items is '/api/menu'
+        fetch('https://localhost:7154/api/Menu/GetMenuAPI/')
             .then(response => response.json())
             .then(data => {
                 // Process the fetched data
@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function displayMenuItems(menuItems) {
         const menuContainer = document.querySelector('.menu-container');
         menuItems.forEach(item => {
+            console.log(item);
             // Create HTML elements for each menu item
             const menuItemDiv = document.createElement('div');
             menuItemDiv.classList.add('menu-item');
@@ -28,7 +29,8 @@ document.addEventListener("DOMContentLoaded", function() {
             itemPrice.textContent = `Price: ${item.price}`;
 
             const itemImage = document.createElement('img');
-            itemImage.src = item.imageUrl; // Assuming your menu item object has an 'imageUrl' property
+            itemImage.src = item.ImageUrl; // Assuming your menu item object has an 'imageUrl' property
+            console.log(item.ImageUrl);
 
             // Append elements to the menu item div
             menuItemDiv.appendChild(itemName);

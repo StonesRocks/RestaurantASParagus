@@ -15,7 +15,6 @@ function hideForms() {
 
 
 
-
 function registerUser(event) {
     event.preventDefault();  // Prevent the default form submission.
 
@@ -38,7 +37,8 @@ function registerUser(event) {
     })
     .then(response => {
         console.log(response.status); // Log the response status
-        if (!response.ok) {
+        console.log(response.json);
+        if (response.status !== 200) {
             return response.json().then(err => { throw new Error(err.message || 'Failed to create user') });
         }
         return response.json();
@@ -58,21 +58,28 @@ function registerUser(event) {
 
 
 function loginUser(event) {
-    event.preventDefault();  // Prevent form from submitting normally
+    event.preventDefault();  // Prevent the form from submitting normally
 
     const userName = document.getElementById('loginUserName').value;
     const password = document.getElementById('loginPassword').value;
-    const url = 'https://localhost:7154/api/User/LoginUser'; // Update with your actual URL
+    const url = 'https://localhost:7154/api/User/LoginUser';
 
-    // Send an object instead of an array
-    const loginInfo = { username: userName, password: password };
+/* 
+        const loginInfo = { 
+            username: userName, 
+            password: password 
+        };
+*/
+
+    // Create an array instead of an object directly with userName and password
+    const loginInfo = [userName, password];
 
     fetch(url, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(loginInfo) // Send the object as JSON
+        body: JSON.stringify(loginInfo) // Send the array as JSON
     })
     .then(response => {
         if (!response.ok) {

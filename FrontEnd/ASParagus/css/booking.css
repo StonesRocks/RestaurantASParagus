@@ -45,7 +45,7 @@ td {
 /* Header Styling */
 th {
     background-color: #f8f8f8;
-    cursor: pointer;
+    /* cursor: pointer;*/
 }
 
 /* Footer Styling */
@@ -198,7 +198,7 @@ button {
     background-color: #4CAF50;
     color: white;
     border: none;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 button:hover {
