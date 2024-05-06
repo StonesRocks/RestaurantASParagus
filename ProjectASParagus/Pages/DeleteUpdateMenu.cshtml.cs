@@ -20,14 +20,19 @@ namespace ProjectASParagus.Pages
             MenuList = db.MenuItems.ToList();
         }
         
-        //Uppdaterar 
-        public void OnPost()
+        //Uppdaterar Databasen. 
+        public void OnPost(MenuItem item)
         {
-
+            MenuItem menuItemToUpdate = db.MenuItems.Find(item.MenuItemId);
+            menuItemToUpdate.ProductName = item.ProductName;
+            menuItemToUpdate.Description = item.Description;
+            db.SaveChanges();
+            MenuList = db.MenuItems.ToList();
         }
-        
+
         public void Delete()
         {
+
         }
     }
 }

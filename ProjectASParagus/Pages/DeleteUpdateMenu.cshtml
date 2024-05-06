@@ -5,19 +5,27 @@
     {
         <div class="container col-6 text-center mb-5 border border-primary rounded p-4" style="margin-top: 15px;">
             <div class="row justify-content-center">
-                    <div class="menu-item">
+                <div class="menu-item">
                     <h3>@menu.ProductName</h3>
-                    <img src="@menu.ImageUrl" class="img-fluid" alt="Menu Image" style="max-width: 200px; max-height: 200px; object-fit: cover; margin-right: 10px; border-radius: 10px;"> 
+                    @if (menu.ImageUrl != "Image missing")
+                    {
+                        <img src="@menu.ImageUrl" class="img-fluid" alt="Menu Image" style="max-width: 200px; max-height: 200px; object-fit: cover; margin-right: 10px; border-radius: 10px;">
+                    }
+                    else
+                    {
+                        <p>No image</p>    
+                    }
                     <p>@menu.Description</p>
-                    <button id="editBtn" class="edit-btn btn btn-primary">Edit</button>
-                    <button id="deleteBtn" class="delete-btn btn btn-danger">Delete</button>
+                    <button id="editBtn-@menu.MenuItemId" class="edit-btn btn btn-primary">Edit</button>
+                    <button id="deleteBtn-@menu.MenuItemId" class="delete-btn btn btn-danger">Delete</button>
 
-                     <form class="edit-form mt-3" style="display:none;">
-                         <input type="text" class="form-control mb-2" name="productName" value="@menu.ProductName" />
-                         <textarea class="form-control mb-2" name="description">@menu.Description</textarea>
-                         <button type="submit" class="btn btn-success">Save</button>
-                         <button type="button" class="cancel-btn btn btn-secondary">Cancel</button>
-                     </form>
+                    <form method="post" class="edit-form mt-3" style="display:none;">
+                        <input type="hidden" name="MenuItemId" value="@menu.MenuItemId" />
+                        <input type="text" class="form-control mb-2" name="productName" value="@menu.ProductName" />
+                        <textarea class="form-control mb-2" name="description">@menu.Description</textarea>
+                        <button type="submit" class="save-btn btn btn-success">Save</button>
+                        <button type="button" class="cancel-btn btn btn-secondary">Cancel</button>
+                    </form>
                 </div>
             </div>
         </div>

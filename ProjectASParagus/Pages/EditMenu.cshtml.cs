@@ -55,7 +55,7 @@ namespace ProjectASParagus.Pages
             AddImageToFiles(file); //lägger till bilden i filsystemet om den inte finns.
             try
             {
-                db.Add(menuItem);
+                db.MenuItems.Add(menuItem);
                 db.SaveChanges();
                 success = true;
                 TempData["success"] = true;
@@ -112,7 +112,8 @@ namespace ProjectASParagus.Pages
                 Console.WriteLine("The uploaded file is not an image.");
                 return;
             }
-
+            //file.FileName = menuItem.ProductName;
+            
             var filepath = Path.Combine(env.ContentRootPath, @"wwwroot/MenuImages", file.FileName); 
 
             if (System.IO.File.Exists(filepath)) //finns filen så läggs den inte till igen.
