@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking - Restaurant ASParagus</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/booking.css">
+
+</head>
+
+    <div class="container">
+        <nav>Navbar
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="booking.html" class="active">Booking</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="account.html">Account</a></li>
+            </ul>
+        </nav>
+        <main>Main</main>
+        <div id="sidebar">Sidebar</div>
+        <div id="content1">Content1</div>
+        <div id="content2">Content2</div>
+        <div id="content3">Content3</div>
+        <footer>Footer</footer>
+
+    </div>
+    
+<body>
+                <table>
+                    <tr>
+                        <th style="border-radius: 10px 0 0 10px;">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%0Aaria-label='test' role='img' viewBox='-25 -25 150 150'%3E%3Ccircle cx='50' cy='50' r='46' stroke='black' stroke-width='4' fill='none' /%3E%3Cpolygon points='25,50 65,25 65,75' style='fill:black;' /%3E%3C/svg%3E%0A" class="butn" alt="&lt;" onclick="vorige();"/>
+                        </th>
+                        <th id="headTable" colspan="5" onclick="nu();">getMonth & getYear</th>
+                        <th style="border-radius: 0 10px 10px 0;">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%0Aaria-label='test' role='img' viewBox='-25 -25 150 150'%3E%3Ccircle cx='50' cy='50' r='46' stroke='black' stroke-width='4' fill='none' /%3E%3Cpolygon points='35,25 35,75 75,50' style='fill:black;' /%3E%3C/svg%3E%0A" class="butn" alt="&gt;" onclick="volgende();"/>
+                        </th>
+                    </tr>
+                
+                    <tr>
+                        <td id="wd1" class="wd">Mån</td>
+                        <td id="wd2" class="wd">Tis</td>
+                        <td id="wd3" class="wd">Ons</td>
+                        <td id="wd4" class="wd">Tor</td>
+                        <td id="wd5" class="wd">Fre</td>
+                        <td id="wd6" class="wd">Lör</td>
+                        <td id="wd7" class="wd">Sön</td>
+                    </tr>
+                    <tr>
+                        <td id="xy1"></td>
+                        <td id="xy2"></td>
+                        <td id="xy3"></td>
+                        <td id="xy4"></td>
+                        <td id="xy5"></td>
+                        <td id="xy6"></td>
+                        <td id="xy7"></td>
+                    </tr>
+                    <tr>
+                        <td id="xy8"></td>
+                        <td id="xy9"></td>
+                        <td id="xy10"></td>
+                        <td id="xy11"></td>
+                        <td id="xy12"></td>
+                        <td id="xy13"></td>
+                        <td id="xy14"></td>
+                    </tr>
+                    <tr>
+                        <td id="xy15"></td>
+                        <td id="xy16"></td>
+                        <td id="xy17"></td>
+                        <td id="xy18"></td>
+                        <td id="xy19"></td>
+                        <td id="xy20"></td>
+                        <td id="xy21"></td>
+                    </tr>
+                    <tr>
+                        <td id="xy22"></td>
+                        <td id="xy23"></td>
+                        <td id="xy24"></td>
+                        <td id="xy25"></td>
+                        <td id="xy26"></td>
+                        <td id="xy27"></td>
+                        <td id="xy28"></td>
+                    </tr>
+                    <tr>
+                        <td id="xy29"></td>
+                        <td id="xy30"></td>
+                        <td id="xy31"></td>
+                        <td id="xy32"></td>
+                        <td id="xy33"></td>
+                        <td id="xy34"></td>
+                        <td id="xy35"></td>
+                        </tr>
+                    <tr>
+                        <td id="xy36"></td>
+                        <td id="xy37"></td>
+                        <td id="xy38"></td>
+                        <td id="xy39"></td>
+                        <td id="xy40"></td>
+                        <td id="xy41"></td>
+                        <td id="xy42"></td>
+                    </tr>
+                </table>
+
+                <div class="time-availability-container">
+                    
+                    <label for="timePicker">Önskad tid</label>
+                    <select id="timePicker">
+                        <option value="12:00">12:00</option>
+                        <option value="12:15">12:15</option>
+                        <option value="12:30">12:30</option>
+                        <option value="12:45">12:45</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:15">13:15</option>
+                        <option value="13:30">13:30</option>
+                        <option value="13:45">13:45</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:15">14:15</option>
+                        <option value="14:30">14:30</option>
+                        <option value="14:45">14:45</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:15">15:15</option>
+                        <option value="15:30">15:30</option>
+                        <option value="15:45">15:45</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:15">16:15</option>
+                        <option value="16:30">16:30</option>
+                        <option value="16:45">16:45</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:15">17:15</option>
+                        <option value="17:30">17:30</option>
+                        <option value="17:45">17:45</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:15">18:15</option>
+                        <option value="18:30">18:30</option>
+                        <option value="18:45">18:45</option>
+                        <option value="19:00">19:00</option>
+                        <option value="19:15">19:15</option>
+                        <option value="19:30">19:30</option>
+                        <option value="19:45">19:45</option>
+                        <option value="20:00">20:00</option>
+                        <option value="20:15">20:15</option>
+                        <option value="20:30">20:30</option>
+                        <option value="20:45">20:45</option>
+                        <option value="21:00">21:00</option>
+
+                    </select>
+                    <label for="guestPicker">Antal gäster:</label>
+                    <select id="guestPicker">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                    <div id="availabilityBox">Tillgänglighet ska synas här</div>
+                    <button onclick="continueToBooking()">Forsätt til bokning</button>
+                </div>
+
+                
+                <container>
+                    <time-dropdown>
+
+                    </time-dropdown>
+                </container>
+
+            </div>
+</body>
+<script src="js/booking.js"></script>
+</html>

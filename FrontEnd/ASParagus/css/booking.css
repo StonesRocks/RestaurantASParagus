@@ -1,0 +1,233 @@
+.current-day {
+    color: #ff7600; /* Sets the font color to red for the current day */
+}
+
+
+/* Basic Styles for Text and Links */
+body {
+    color: #303030;
+    background-repeat: no-repeat;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin: 10px;
+}
+
+a {
+    color: #ff7600;
+    text-decoration: none;
+}
+
+.non-current-month {
+    color: #ccc; /* Light grey text color for non-current month days */
+}
+
+/* Styling for Table, Rows, and Cells */
+table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    margin-bottom: 4px;
+    width: 210px; /* Default width, adjusted in media queries */
+}
+
+th, td {
+    text-align: center;
+}
+
+td {
+    border: 2px solid #fff;
+    height: 27px;
+    width: 27px;
+    background-color: #ddd;
+    border-radius: 8px;
+}
+
+/* Header Styling */
+th {
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+/* Footer Styling */
+footer {
+    line-height: 1.8;
+    background-color: #f9f9f9;
+    text-decoration: none;
+    text-align: center;
+}
+
+/* Class-based Adjustments for Days and Colors */
+.wd, .we {
+    background-color: #fff;
+    font-weight: 400;
+    border-radius: 8px;
+}
+
+.we {
+    color: red;
+}
+
+.xyv {
+    background-color: #33ff33;
+}
+
+.xyl {
+    background-color: #ffff33;
+}
+
+.xyn {
+    background-color: #33ffff;
+}
+
+.xyd {
+    background-color: #d6adff;
+}
+
+.xya {
+    background-color: #aed6f1;
+}
+
+.clra {
+    background-color: #ffcc00;
+}
+
+.clrb {
+    background-color: #a9dfbf;
+}
+
+.clrc {
+    background-color: #f9e79f;
+}
+
+.xy0 {
+    background-color: #F8F8F8;
+}
+
+/* Responsive Design Adjustments */
+@media (min-width: 320px) {
+    table {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    td {
+        height: 34px;
+        width: 14.286%;
+    }
+
+    .butn {
+        height: 32px;
+        width: 32px;
+    }
+
+    .container {
+        width: 100%;
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 360px) {
+    .container select, table, th a {
+        font-size: 16px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        height: 47px;
+        width: 14.286%;
+    }
+
+    .butn {
+        height: 45px;
+        width: 45px;
+    }
+}
+
+@media (min-width: 400px) {
+    td {
+        height: 49px;
+        width: 14.286%;
+    }
+}
+
+@media (min-width: 440px) {
+    table, th a {
+        font-size: 16px;
+    }
+
+    table {
+        width: 400px;
+        max-width: 400px;
+    }
+
+    td {
+        height: 50px;
+        width: 50px;
+    }
+
+    .butn {
+        height: 48px;
+        width: 48px;
+    }
+}
+
+
+/*Time picker, availability display as well as continue booking buttion part of the code*/
+
+.time-availability-container {
+    margin-top: 20px;
+}
+
+#timePicker {
+    margin: 10px;
+    padding: 5px;
+}
+
+#availabilityBox {
+    margin: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #d3d3d3;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.dropdown-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.dropdown-container label,
+.dropdown-container select {
+    margin-right: 10px;
+}
+
+#timePicker, #guestPicker {
+    padding: 5px;
+}
+
+
+/*centers everything*/
+.time-availability-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+

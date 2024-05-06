@@ -1,0 +1,23 @@
+#account-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#buttons button {
+    width: 50%;
+    padding: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.row input {
+    width: 90%;
+    padding: 8px;
+    margin: 5px;
+}
+
+form {
+    text-align: center;
+}
