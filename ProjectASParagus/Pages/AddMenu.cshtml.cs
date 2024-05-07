@@ -6,12 +6,12 @@ using ProjectASParagus.Objects;
 
 namespace ProjectASParagus.Pages
 {
-    public class EditMenuModel : PageModel
+    public class AddMenuModel : PageModel
     {
         [BindProperty]
         public MenuItem menuItem { get; set; }
-        DatabaseContext db;
-        IWebHostEnvironment env;
+        public DatabaseContext db;
+        public IWebHostEnvironment env;
 
         public string errorMessages = "Item already added.";
         public bool itemExists = false;
@@ -19,7 +19,7 @@ namespace ProjectASParagus.Pages
         public bool successNoImage = false;
         public bool fail = false;
 
-        public EditMenuModel(DatabaseContext db, IWebHostEnvironment env) 
+        public AddMenuModel(DatabaseContext db, IWebHostEnvironment env) 
         { 
             this.env = env;
             this.db = db;
@@ -54,6 +54,7 @@ namespace ProjectASParagus.Pages
             menuItem.ProductName = CapitalizeMenuName(menuItem.ProductName);
             menuItem.Description = CapitalizeAndAppendPeriod(menuItem.Description);
             AddImageToFiles(file); //lägger till bilden i filsystemet om den inte finns.
+
             try
             {
                 db.MenuItems.Add(menuItem);
@@ -67,11 +68,12 @@ namespace ProjectASParagus.Pages
                 TempData["fail"] = true;
                 await Console.Out.WriteLineAsync("Error occurred while saving to database.");
             }
-            return Redirect("/EditMenu");
+            return Redirect("/AddMenu");
         }
         //gör så att beskrivningen sparas med vokal och punkt i slutet.
         private string CapitalizeAndAppendPeriod(string description)
         {
+
             string capitalized = string.Empty;
             if (!(description.Length > 0 && description[0] == char.ToUpper(description[0])))
             {
@@ -111,25 +113,50 @@ namespace ProjectASParagus.Pages
         //lägger till bilder i filsystemet 
         public async Task AddImageToFiles(IFormFile file)
         {
+            string currentDirectory = Directory.GetCurrentDirectory();
+            string solutionDirectory = Directory.GetParent(currentDirectory).FullName;
+            string folderName = "ImageFolder";
+            string path = Path.Combine(solutionDirectory, folderName);
+
+            //skapar en folder där fronend och backend är sparat.
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             if (file == null || !file.ContentType.StartsWith("image/"))
             {
                 Console.WriteLine("The uploaded file is not an image.");
                 return;
             }
-            //file.FileName = menuItem.ProductName;
             
-            var filepath = Path.Combine(env.ContentRootPath, @"wwwroot/MenuImages", file.FileName); 
+            var filepath = Path.Combine(env.ContentRootPath, @"wwwroot/MenuImages", file.FileName); //skriver in till programmet så admin kan se bilden
+            var secondFilepath = Path.Combine(path, file.FileName); //skriver in till imagefolder så fronend kan hämta
+
 
             if (System.IO.File.Exists(filepath)) //finns filen så läggs den inte till igen.
             {
                 await Console.Out.WriteLineAsync("image already exists");
                 return;
             }
+            if (System.IO.File.Exists(secondFilepath)) //finns filen så läggs den inte till igen i imagefolder
+            {
+                await Console.Out.WriteLineAsync("image already exists");
+                return;
+            }
+
             using (FileStream stream = new FileStream(filepath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
+                Console.WriteLine("Image successfully to menuImages added");
             }
-            Console.WriteLine("Image successfully added");
+            using (FileStream stream = new FileStream(secondFilepath, FileMode.Create)) //skriver in filen i imagefolder
+            {
+                await file.CopyToAsync(stream);
+                Console.WriteLine("Image successfully added to ImageFolder to frontend");
+                return;
+            }
+
         }
     }
 }

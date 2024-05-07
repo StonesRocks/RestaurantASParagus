@@ -1,6 +1,10 @@
 ﻿@page
 @model ProjectASParagus.Pages.DeleteUpdateMenuModel
 @{
+    if(Model.MenuList.Count == 0)
+    {
+        <p>There are currently no menus available.</p>
+    }
     @foreach (var menu in Model.MenuList)
     {
         <div class="container col-6 text-center mb-5 border border-primary rounded p-4" style="margin-top: 15px;">
@@ -9,19 +13,23 @@
                     <h3>@menu.ProductName</h3>
                     @if (menu.ImageUrl != "Image missing")
                     {
-                        <img src="@menu.ImageUrl" class="img-fluid" alt="Menu Image" style="max-width: 200px; max-height: 200px; object-fit: cover; margin-right: 10px; border-radius: 10px;">
+                        <img src="@menu.ImageUrl" class="img-fluid" alt="Menu Image" style="max-width: 250px; max-height: 250px; object-fit: cover; margin-right: 10px; border-radius: 10px;">
                     }
                     else
                     {
                         <p>No image</p>    
                     }
+                    <p>@menu.Price :-</p>
                     <p>@menu.Description</p>
                     <button id="editBtn-@menu.MenuItemId" class="edit-btn btn btn-primary">Edit</button>
                     <button id="deleteBtn-@menu.MenuItemId" class="delete-btn btn btn-danger">Delete</button>
 
-                    <form method="post" class="edit-form mt-3" style="display:none;">
+                    <form method="post" class="edit-form mt-3" style="display:none;" enctype="multipart/form-data">
                         <input type="hidden" name="MenuItemId" value="@menu.MenuItemId" />
                         <input type="text" class="form-control mb-2" name="productName" value="@menu.ProductName" />
+                        <label class="form-label"> Upload Image</label>
+                        <input id="fileInput" type="file" name="file" class="form-control" accept="image/*" />
+                        <input type="number" class="form-control mb-2" name="Price" value="@menu.Price" />
                         <textarea class="form-control mb-2" name="description">@menu.Description</textarea>
                         <button type="submit" class="save-btn btn btn-success">Save</button>
                         <button type="button" class="cancel-btn btn btn-secondary">Cancel</button>

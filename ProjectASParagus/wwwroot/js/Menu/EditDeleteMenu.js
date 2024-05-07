@@ -22,3 +22,35 @@ editButtons.forEach(function (button)
         }
     });
 });
+
+deleteBtn.forEach(function (button)
+{
+    button.addEventListener('click', function ()
+    {
+        console.log("we got here")
+        var menuItemId = button.id.split('-')[1]; // Extract the menu item ID from the button ID
+        // Send AJAX request to delete the menu item
+        fetch('/YourPageName?handler=Delete',
+            {
+                method: 'POST',
+                headers:
+                {   
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ menuItemId: menuItemId }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    // If deletion is successful, remove the menu item from the DOM
+                    var menuItem = button.closest('.menu-item');
+                    menuItem.remove();
+                } else {
+                    // Handle error response
+                    console.error('Failed to delete menu item');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+});

@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using ProjectASParagus.Objects;
+using ProjectASParagus.Pages;
 using ProjectASParagus.Services;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace ProjectASParagus
@@ -21,6 +25,7 @@ namespace ProjectASParagus
             builder.Services.AddTransient<UserService>();
             builder.Services.AddTransient<BookingService>();
             builder.Services.AddTransient<MenuService>();
+            builder.Services.AddTransient<AddMenuModel>(); //deleteEdit crashar utan denna????
 
             string connectionString = builder.Configuration.GetConnectionString("mySqlConnectionString");
             builder.Services.AddDbContext<DatabaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
@@ -38,8 +43,6 @@ namespace ProjectASParagus
 
 
             var app = builder.Build();
-
-            
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

@@ -7,10 +7,14 @@ namespace ProjectASParagus.Pages
     public class DeleteUpdateMenuModel : PageModel
     {
         public List<MenuItem> MenuList = new List<MenuItem>();  
-        DatabaseContext db;
+        public DatabaseContext db;
+        public AddMenuModel addMenu;
+        public IHostEnvironment env;
 
-        public DeleteUpdateMenuModel(DatabaseContext db) 
+        public DeleteUpdateMenuModel(DatabaseContext db,AddMenuModel addmenu, IHostEnvironment env) 
         {
+            this.env = env;
+            this.addMenu = addmenu;
             this.db = db;        
         }
         
@@ -21,18 +25,35 @@ namespace ProjectASParagus.Pages
         }
         
         //Uppdaterar Databasen. 
-        public void OnPost(MenuItem item)
+        public async void OnPost(MenuItem item,IFormFile file)
         {
+            if(file != null)
+            {
+                addMenu.AddImageToFiles(file);
+            }
+
             MenuItem menuItemToUpdate = db.MenuItems.Find(item.MenuItemId);
             menuItemToUpdate.ProductName = item.ProductName;
             menuItemToUpdate.Description = item.Description;
+            menuItemToUpdate.Price = item.Price;
+            if (file != null)
+            {
+                menuItemToUpdate.ImageUrl = "ImageFolder/" + file.FileName;
+            }
             db.SaveChanges();
             MenuList = db.MenuItems.ToList();
+            Page();
         }
 
-        public void Delete()
+        public async Task<IActionResult> OnPostDelete(MenuItem menuItem)
         {
-
+            var menuItemToDelete = db.MenuItems.Find(menuItem.MenuItemId);
+            if (menuItemToDelete != null)
+            {
+                db.MenuItems.Remove(menuItemToDelete);
+                await db.SaveChangesAsync();
+            }
+            return RedirectToPage();
         }
     }
 }
