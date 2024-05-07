@@ -25,10 +25,12 @@ namespace ProjectASParagus.Pages
             this.db = db;
         }
 
+        //behövs inte än.
         public void OnGet()
         {
         }
 
+        //skapar en meny.
         public async Task<ActionResult> OnPost(IFormFile file)
         {
             if(menuItem.Description == null || menuItem.ProductName == null)
@@ -47,7 +49,6 @@ namespace ProjectASParagus.Pages
                 menuItem.ImageUrl = "Image missing";
                 successNoImage = true;
                 TempData["successNoImage"] = true;
-
             }
             
             menuItem.ProductName = CapitalizeMenuName(menuItem.ProductName);
@@ -88,6 +89,7 @@ namespace ProjectASParagus.Pages
 
             return capitalized;
         }
+
         //Gör så att Meny namnet sparas ner med storbokastav till databasen.
         private string CapitalizeMenuName(string menuItemName)
         {
@@ -103,7 +105,9 @@ namespace ProjectASParagus.Pages
             return capitalized;
         }
 
-
+        //ändra till ny mapp där frontend och backend kan nå bilderna.
+        //
+        //
         //lägger till bilder i filsystemet 
         public async Task AddImageToFiles(IFormFile file)
         {
