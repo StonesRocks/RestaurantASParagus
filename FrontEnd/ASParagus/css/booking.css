@@ -231,3 +231,11 @@ button:hover {
     margin-top: 20px;
 }
 
+.selected-date {
+    background-color: #4CAF50; /* Green background for selected date */
+    color: white; /* White text color */
+}
+
+.date-cell { /* Changed cursor to pointer instead of mark-text-cursor */
+    cursor: pointer;
+}
