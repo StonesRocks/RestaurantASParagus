@@ -17,6 +17,18 @@ namespace ProjectASParagus.Services
         //alltså spelar det roll vilken funktion som körs i vilken ording
         public bool CreateBooking(Booking booking)
         {
+            if (booking == null)
+            {
+                return false;
+            }
+            if (AvailableSeats(booking))
+            {
+                db.Bookings.Add(booking);
+                db.SaveChanges();
+                return true;
+            }
+            return false;
+            /*
             try
             {
                 db.Bookings.Add(booking);
@@ -29,6 +41,16 @@ namespace ProjectASParagus.Services
                 Console.WriteLine($"Could not book, something went wrong in BookingService CreateBooking \t{ex.Message}");
                 return false;
             }
+            */
+        }
+        public bool AvailableSeats(Booking booking)
+        {
+            int currentSeatsBooked = GetSumOfPers(booking);
+            if (currentSeatsBooked+booking.PartySize <= availableSeats)
+            {
+                return true;
+            }
+            return false;
         }
 
         //kollar om det finns plats på den angivna tiden 
@@ -80,6 +102,8 @@ namespace ProjectASParagus.Services
 
         public bool UpdateBooking(Booking booking)
         {
+            return false;
+            /*
             try
             {
                 Booking oldBooking = db.Bookings.Find(booking.BookingId); //retunerar null om inget hittas
@@ -107,6 +131,7 @@ namespace ProjectASParagus.Services
                 Console.WriteLine($"Error in BookingService, could not run UpdateBooking.\n{ex}");
                 return false;
             }
+            */
         }
 
         public Booking GetBooking(int bookedUserId)
@@ -120,6 +145,28 @@ namespace ProjectASParagus.Services
                 Console.WriteLine($"Error in BookingService. GetBooking, could not find: {bookedUserId} \n {e.Message}");
                 return null;
             }
+        }
+
+        public Dictionary<DateTime, int> GetBookingsByDate(DateTime date)
+        {
+
+            Dictionary<DateTime, int> bookings = new Dictionary<DateTime, int>();
+            var bookingsInMonth = db.Bookings.Where(b => b.BookingDate.Month == date.Month && b.BookingDate.Year == date.Year).ToList();
+            foreach ( var booking in bookingsInMonth)
+            {
+                for (int i = 0; i < 2*60/15; i += 15)
+                {
+                    if (bookings.ContainsKey(booking.BookingDate))
+                    {
+                        bookings[booking.BookingDate] += booking.PartySize;
+                    }
+                    else
+                    {
+                        bookings.Add(booking.BookingDate, booking.PartySize);
+                    }
+                }
+            }
+            return bookings;
         }
         
         //sparar användares Email i samma format.
@@ -137,6 +184,7 @@ namespace ProjectASParagus.Services
             return capitalizedString;
         }
 
+        /*
         private bool CheckForEmailInDb (string email)
         {
             Booking booking= db.Bookings.Find(email);
@@ -147,5 +195,7 @@ namespace ProjectASParagus.Services
             }
             return false;
         }
+        */
+
     }
 }

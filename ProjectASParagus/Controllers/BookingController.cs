@@ -9,6 +9,8 @@ namespace ProjectASParagus.Controllers
     [ApiController]
     public class BookingController : ControllerBase
     {
+        public enum Role { Admin, User, Guest }
+
         BookingService bookingService;
         public BookingController(BookingService bookingService)
         {
@@ -16,12 +18,11 @@ namespace ProjectASParagus.Controllers
         }
 
         [HttpPost("AddBooking")]
-        public ActionResult CreateBooking(User user)
+        public ActionResult CreateBooking(Booking booking)
         {
-
-            if ( user == null)
+            if (bookingService.CreateBooking(booking))
             {
-                return BadRequest();
+                return Ok();
             }
             return Conflict();
         }
@@ -87,6 +88,17 @@ namespace ProjectASParagus.Controllers
                 return NotFound();
             }
             return Ok(booking);
+        }
+
+        [HttpGet("GetBookingByDate/{date}")]
+        public ActionResult GetBookingsByDate(DateTime date)
+        {
+            Dictionary<DateTime, int> bookings = bookingService.GetBookingsByDate(date);
+            if (bookings == null)
+            {
+                return NotFound();
+            }
+            return Ok(bookings);
         }
     }
 }
