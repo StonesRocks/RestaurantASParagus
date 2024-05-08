@@ -23,8 +23,7 @@
                     <p>@menu.Description</p>
                     <div class="button-group">
                         <button id="editBtn-@menu.MenuItemId" class="edit-btn btn btn-primary">Edit</button>
-                        <form method="post" id="deleteForm-@menu.MenuItemId" class="delete-form" style="display:inline;">
-                            <input type="hidden" name="action" value="Delete" />
+                        <form method="post" asp-page-handler="Delete" id="deleteForm-@menu.MenuItemId" class="delete-form" style="display:inline;">
                             <input type="hidden" name="menuItemID" value="@menu.MenuItemId" />
                             <input type="hidden" name="ProductName" value="@menu.ProductName" />
                             <input type="hidden" name="Description" value="@menu.Description" />
@@ -40,7 +39,6 @@
                         <input type="hidden" name="Description" value="@menu.Description" />
                         <input type="hidden" name="Price" value="@menu.Price" />
                         <input type="hidden" name="ImageUrl" value="@menu.ImageUrl" />
-                        <input type="hidden" name="action" value="Update" />
                         <input type="text" class="form-control mb-2" name="productName" value="@menu.ProductName" />
                         <input id="fileInput" type="file" name="file" class="form-control" accept="image/*" />
                         <input type="number" class="form-control mb-2 mt-2" name="Price" value="@menu.Price" />

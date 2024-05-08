@@ -38,7 +38,7 @@ namespace ProjectASParagus.Pages
 
             if(file != null)
             {
-                menuItem.ImageUrl = "MenuImages/" + file.FileName;
+                menuItem.ImageUrl = "MenuImages\\" + file.FileName;
             }
             else
             {
@@ -133,12 +133,10 @@ namespace ProjectASParagus.Pages
             if (System.IO.File.Exists(filepath)) //finns filen så läggs den inte till igen.
             {
                 await Console.Out.WriteLineAsync("image already exists");
-                return;
             }
             if (System.IO.File.Exists(secondFilepath)) //finns filen så läggs den inte till igen i imagefolder
             {
                 await Console.Out.WriteLineAsync("image already exists");
-                return;
             }
 
             using (FileStream stream = new FileStream(filepath, FileMode.Create))
