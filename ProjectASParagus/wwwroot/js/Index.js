@@ -1,5 +1,4 @@
 ﻿
-
 let userNameField = document.getElementById("userName");
 let userPassField = document.getElementById("userPass");
 let statusField = document.getElementById("StatusMessage");
