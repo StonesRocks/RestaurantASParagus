@@ -25,10 +25,6 @@ namespace ProjectASParagus.Pages
             this.db = db;
         }
 
-        //behövs inte än.
-        public void OnGet()
-        {
-        }
 
         //skapar en meny.
         public async Task<ActionResult> OnPost(IFormFile file)

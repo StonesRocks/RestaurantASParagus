@@ -42,6 +42,11 @@ window.onload = function () {
     findUserDiv();
     editUserDiv();
 
+    let navbar = document.getElementById("navbar");
+
+    if (navbar.style.display === "block" || navbar.style.display === "") {
+        navbar.style.display = "none";
+    }
 }
 
 function GetSession() {
@@ -432,7 +437,16 @@ function UpdateUser(User) {
 }
 
 function AdminMenu() {
-    if (adminUser) {
+    if (adminUser)
+    {
+        let navbar = document.getElementById("navbar");
+
+        if (navbar.style.display === "none" || navbar.style.display === "")
+        {
+            navbar.style.display = "block";
+        }
+
+
         let loginDiv = document.getElementById("LoginDiv");
         let welcome = document.getElementById("WelcomeText");
         let bookingDiv = document.getElementById("BookingDiv");

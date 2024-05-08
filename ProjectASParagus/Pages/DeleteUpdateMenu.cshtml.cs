@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProjectASParagus.Objects;
+using System.IO;
 
 namespace ProjectASParagus.Pages
 {
@@ -23,37 +24,52 @@ namespace ProjectASParagus.Pages
         {
             MenuList = db.MenuItems.ToList();
         }
-        
-        //Uppdaterar Databasen. 
-        public async void OnPost(MenuItem item,IFormFile file)
-        {
-            if(file != null)
-            {
-                addMenu.AddImageToFiles(file);
-            }
 
-            MenuItem menuItemToUpdate = db.MenuItems.Find(item.MenuItemId);
-            menuItemToUpdate.ProductName = item.ProductName;
-            menuItemToUpdate.Description = item.Description;
-            menuItemToUpdate.Price = item.Price;
-            if (file != null)
-            {
-                menuItemToUpdate.ImageUrl = "ImageFolder/" + file.FileName;
-            }
-            db.SaveChanges();
-            MenuList = db.MenuItems.ToList();
-            Page();
-        }
-
-        public async Task<IActionResult> OnPostDelete(MenuItem menuItem)
+        //Uppdaterar Databasen eller tar bort 
+        public void OnPost(MenuItem item,IFormFile file, string action)
         {
-            var menuItemToDelete = db.MenuItems.Find(menuItem.MenuItemId);
-            if (menuItemToDelete != null)
+            if (action == "Update")
             {
-                db.MenuItems.Remove(menuItemToDelete);
-                await db.SaveChangesAsync();
+                if (file != null)
+                {
+                    addMenu.AddImageToFiles(file);
+                }
+
+                MenuItem menuItemToUpdate = db.MenuItems.Find(item.MenuItemId);
+                menuItemToUpdate.ProductName = item.ProductName;
+                menuItemToUpdate.Description = item.Description;
+                menuItemToUpdate.Price = item.Price;
+
+                if (file != null)
+                {
+                    menuItemToUpdate.ImageUrl = "MenuImages/" + file.FileName;
+                }
+                db.SaveChanges();
+                MenuList = db.MenuItems.ToList();
+                Page();
             }
-            return RedirectToPage();
+            else if(action == "Delete")
+            {
+                if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    // Combine the base directory with the image path
+                    string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, item.ImageUrl);
+
+                    // Check if the file exists before attempting to delete it
+                    if (System.IO.File.Exists(imagePath))
+                    {
+                        System.IO.File.Delete(imagePath);
+                    }
+                }
+                MenuItem menuItemToDelete = db.MenuItems.Find(item.MenuItemId);
+
+                if (menuItemToDelete != null)
+                {
+                    db.MenuItems.Remove(menuItemToDelete);
+                    db.SaveChanges();
+                }
+                MenuList = db.MenuItems.ToList();
+            }
         }
     }
 }
