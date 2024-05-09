@@ -10,7 +10,6 @@ namespace ProjectASParagus.Controllers
     public class BookingController : ControllerBase
     {
         public enum Role { Admin, User, Guest }
-
         BookingService bookingService;
         public BookingController(BookingService bookingService)
         {
@@ -99,6 +98,22 @@ namespace ProjectASParagus.Controllers
                 return NotFound();
             }
             return Ok(bookings);
+        }
+
+        ////////////////////////////ADMIN FUNCTIONS I INDEX///////////////////////////////
+        [HttpPost("GiveAdminBookings")]
+        public ActionResult GiveAdminBookings(List<string>JsonList)
+        {
+            List<Booking> bookingList = new List<Booking>();
+            if(JsonList.Count >= 3)
+            {
+                int.TryParse(JsonList[0], out int bookingId);
+                int.TryParse(JsonList[1], out int bookingUserId);
+                DateTime.TryParse(JsonList[2], out DateTime bookingdate);
+
+                bookingList = bookingService.GiveAdminBookings(bookingId, bookingUserId, bookingdate); 
+            }
+            return Ok(bookingList);
         }
     }
 }

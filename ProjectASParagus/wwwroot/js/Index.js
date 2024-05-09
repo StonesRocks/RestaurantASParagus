@@ -28,14 +28,16 @@ userPassField.addEventListener("keypress", function (e) {
         LoginUser();
     }
 });
-window.onload = function () {
+window.onload = function ()
+{
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
 
     today = yyyy + '-' + mm + '-' + dd;
-    document.getElementById('dateInput').value = today;
+    document.getElementById('dateInput').value = today; 
+    document.getElementById('dateInputBooking').value = today; 
     GetSession();
     createUserDiv();
     findUserDiv();
@@ -449,12 +451,10 @@ function AdminMenu() {
         let loginDiv = document.getElementById("LoginDiv");
         let welcome = document.getElementById("WelcomeText");
         let bookingDiv = document.getElementById("BookingDiv");
-        let menuDiv = document.getElementById("MenuDiv");
         let userDiv = document.getElementById("UserDiv");
 
         loginDiv.style.visibility = "hidden";
         bookingDiv.style.visibility = "visible";
-        menuDiv.style.visibility = "visible";
         userDiv.style.visibility = "visible";
 
         welcome.innerHTML = `Welcome ${ActiveUser.userName}`;
@@ -567,3 +567,93 @@ function Booking(User, PartySize, BookingDate) {
     this.PartySize = PartySize;
     this.Date = BookingDate;
 }
+
+//////////////ADMIN THINGS///////////////////////
+
+document.addEventListener('DOMContentLoaded', function ()
+{
+    const form = document.getElementById("searchBookingForm");
+
+    form.addEventListener('submit', function (event)
+    {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        //let formData =
+        //{
+        //    bookingId: document.getElementById("bookingid").value,
+        //    bookingUserId: document.getElementById("userid").value,
+        //    bookingDate: document.getElementById("dateInputBooking").value
+        //};
+        let Newarray =
+             [document.getElementById("bookingid").value,
+            document.getElementById("userid").value,
+            document.getElementById("dateInputBooking").value];
+
+        let jsonData = JSON.stringify(Newarray);
+        console.log(Newarray);
+        fetch(url + "api/Booking/GiveAdminBookings",
+            {
+                method: "POST",
+                headers:
+                {
+                    "Content-Type": "application/json" 
+                },
+                body: jsonData // Send JSON data in the request body
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else
+                {
+                    console.log("Error in response.")
+                    throw new Error("Error fetching bookings");
+                }
+            })
+            .then(bookings =>
+            {
+                if (bookings.length > 0)
+                {
+                    console.log("we are inside of builder shit");
+                    bookings.forEach(booking => {
+                        let createdDiv = document.createElement("div");
+                        console.log(bookings);
+                        let createdP = document.createElement("p");
+                        createdP.textContent = booking.bookingId;
+
+                        let createdPUserId = document.createElement("p");
+                        createdPUserId.textContent = booking.bookedUserId;
+
+                        let createdPPartySize = document.createElement("p");
+                        createdPPartySize.textContent = booking.partySize;
+
+                        let createdPDate = document.createElement("p");
+                        createdPDate.textContent = booking.bookingDate;
+
+                        createdDiv.appendChild(createdP);
+                        createdDiv.appendChild(createdPUserId);
+                        createdDiv.appendChild(createdPPartySize);
+                        createdDiv.appendChild(createdPDate);
+                        document.body.appendChild(createdDiv);
+                    });
+                }
+                else
+                {
+                    let alert = document.createElement("div");
+                    alert.classList.add("alert", "alert-warning", "mt-3");
+
+                    let message = document.createElement("span");
+                    message.textContent = "There are no bookings with the given information.";
+                    message.classList.add("text-danger"); // Apply the Bootstrap class to make the text red
+
+                    alert.appendChild(message);
+
+                    // Append the alert to the container or any desired location in the DOM
+                    let container = document.querySelector(".bookingDiv");
+                    container.appendChild(alert);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+});

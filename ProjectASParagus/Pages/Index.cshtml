@@ -37,13 +37,37 @@
     </div>
 </div>
 
-<div class="text-center" id="MenuDiv" style="visibility: hidden">
-    <h1>Menu</h1>
-    <div class="DivBorder">
-
+<form id="searchBookingForm" method="post">
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-8">
+                <div class="text-center bookingDiv">
+                    <h1>Manage Bookings</h1>
+                    <div class="DivBorder row">
+                        <div class="col m-2">
+                            <div class="form-group">
+                                <input type="number" placeholder="Booking ID" class="form-control" id="bookingid" name="bookingId">
+                            </div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="form-group">
+                                <input type="number" placeholder="User ID" class="form-control" id="userid" name="userBookingId">
+                            </div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="form-group">
+                                <input type="date" id="dateInputBooking" class="form-control" name="bookingDate">
+                            </div>
+                        </div>
+                        <div class="col m-2">
+                            <button id="searchBtn" type="submit" class="btn btn-primary btn-block">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
+</form>
 <div class="text-center" id="UserDiv" style="visibility: hidden">
     <h1>User</h1>
     <div class="DivBorder" id="UserListDiv">

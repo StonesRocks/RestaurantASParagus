@@ -13,7 +13,6 @@ namespace ProjectASParagus.Objects
         public int PartySize { get; set; }
         public DateTime BookingDate { get; set; }
 
-
         public Booking(DateTime bookingDate, User user)
         {
             this.BookingDate = bookingDate;

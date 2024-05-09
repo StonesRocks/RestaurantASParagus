@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Server.HttpSys;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using ProjectASParagus.Objects;
 
@@ -102,8 +103,6 @@ namespace ProjectASParagus.Services
 
         public bool UpdateBooking(Booking booking)
         {
-            return false;
-            /*
             try
             {
                 Booking oldBooking = db.Bookings.Find(booking.BookingId); //retunerar null om inget hittas
@@ -113,16 +112,11 @@ namespace ProjectASParagus.Services
                 {
                     return false;
                 }
-                if (CheckForEmailInDb(booking.Email)) //uppdaterar emailen om den inte redan existerar, sen formatterar den till storbokstav.
-                {
-                    oldBooking.Email= booking.Email;
-                    MakeFirstCapital(booking.Email);
-                }
+
                 oldBooking.PartySize = booking.PartySize;
-                oldBooking.PhoneNumber= booking.PhoneNumber;
                 oldBooking.BookingDate = booking.BookingDate;
 
-                db.Update(booking);
+                db.Update(oldBooking);
                 db.SaveChanges();
                 return true;
             }
@@ -131,7 +125,6 @@ namespace ProjectASParagus.Services
                 Console.WriteLine($"Error in BookingService, could not run UpdateBooking.\n{ex}");
                 return false;
             }
-            */
         }
 
         public Booking GetBooking(int bookedUserId)
@@ -184,6 +177,37 @@ namespace ProjectASParagus.Services
             return capitalizedString;
         }
 
+        public List<Booking> GiveAdminBookings(int? bookingId, int? userBookingId, DateTime? bookingDate)
+        {
+            List<Booking> bookingList = new List<Booking>();
+
+            if (bookingId != null)
+            {
+                var booking = db.Bookings.Where(b => b.BookingId == bookingId);
+                bookingList.AddRange(booking);
+            }
+            if (userBookingId != null)
+            {
+                var booking = db.Bookings.Where(b => b.BookedUserId == userBookingId).ToList();
+                bookingList.AddRange(booking);
+            }
+            if (bookingDate != null)
+            {
+                var booking = db.Bookings.Where(b => b.BookingDate == bookingDate).ToList();
+                bookingList.AddRange(booking);
+            }
+            //om någon parameter har ett värde, ge tillbaka
+            if (userBookingId.HasValue && bookingId.HasValue && bookingDate.HasValue)
+            {
+                return bookingList;
+            }
+            else
+            {
+
+                return null;
+            }
+        }
+
         /*
         private bool CheckForEmailInDb (string email)
         {
@@ -196,6 +220,5 @@ namespace ProjectASParagus.Services
             return false;
         }
         */
-
     }
 }

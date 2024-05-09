@@ -69,7 +69,7 @@ namespace ProjectASParagus.Controllers
             {
                 "userName": "admin",
                 "userPass": "admin",
-                "email": "admin",
+                "email": "admin@mail.com",
                 "phoneNumber": "1337",
                 "userRole": "Admin"
             }
