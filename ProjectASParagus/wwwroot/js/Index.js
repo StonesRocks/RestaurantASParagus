@@ -450,20 +450,15 @@ function UpdateUser(User) {
 function AdminMenu() {
     if (adminUser)
     {
-        let navbar = document.getElementById("navbar");
-
-        if (navbar.style.display === "none" || navbar.style.display === "")
-        {
-            navbar.style.display = "block";
-        }
-
 
         let loginDiv = document.getElementById("LoginDiv");
         let welcome = document.getElementById("WelcomeText");
         let bookingDiv = document.getElementById("BookingDiv");
         let userDiv = document.getElementById("UserDiv");
+        let searchbookingdiv = document.getElementById("searchBookingForm");
 
         loginDiv.style.visibility = "hidden";
+        searchbookingdiv.style.visibility = "visible";
         bookingDiv.style.visibility = "visible";
         userDiv.style.visibility = "visible";
 
@@ -734,29 +729,69 @@ document.addEventListener('DOMContentLoaded', function ()
             })
             .then(bookings =>
             {
-                if (bookings.length > 0)
-                {
+                if (bookings.length > 0) {
                     console.log("we are inside of builder shit");
                     bookings.forEach(booking => {
-                        let createdDiv = document.createElement("div");
-                        console.log(bookings);
-                        let createdP = document.createElement("p");
-                        createdP.textContent = booking.bookingId;
 
-                        let createdPUserId = document.createElement("p");
-                        createdPUserId.textContent = booking.bookedUserId;
+                        let containerDiv = document.createElement("div");
+                        containerDiv.classList.add("container");
 
-                        let createdPPartySize = document.createElement("p");
-                        createdPPartySize.textContent = booking.partySize;
+                        let rowDiv = document.createElement("div");
+                        rowDiv.classList.add("row", "justify-content-center", "mt-5");
 
-                        let createdPDate = document.createElement("p");
-                        createdPDate.textContent = booking.bookingDate;
+                        let colDiv = document.createElement("div");
+                        colDiv.classList.add("col-lg-8"); 
 
-                        createdDiv.appendChild(createdP);
-                        createdDiv.appendChild(createdPUserId);
-                        createdDiv.appendChild(createdPPartySize);
-                        createdDiv.appendChild(createdPDate);
-                        document.body.appendChild(createdDiv);
+                        let textCenterDiv = document.createElement("div");
+                        textCenterDiv.classList.add("text-center", "bookingDiv");
+
+
+                        let bookingDetailsDiv = document.createElement("div");
+                        bookingDetailsDiv.classList.add("DivBorder", "row");
+                        bookingDetailsDiv.style.border = "5px solid green";
+
+
+                        let bookingIdCol = document.createElement("div");
+                        bookingIdCol.classList.add("col", "m-2");
+
+                        let bookingIdInput = document.createElement("p");
+                        bookingIdInput.textContent = "Booking ID: " + booking.bookingId;
+
+                        let userIdCol = document.createElement("div");
+                        userIdCol.classList.add("col", "m-2");
+
+                        let userIdInput = document.createElement("p");
+                        userIdInput.textContent = "Booked User ID: " + booking.bookedUserId;
+
+                        let partySizeCol = document.createElement("div");
+                        partySizeCol.classList.add("col", "m-2");
+
+                        let partySizeInput = document.createElement("p");
+                        partySizeInput.textContent = "Party Size: " + booking.partySize;
+
+                        let bookingDateCol = document.createElement("div");
+                        bookingDateCol.classList.add("col", "m-2");
+
+                        let bookingDateInput = document.createElement("p");
+                        bookingDateInput.textContent = "Booking Date: " + booking.bookingDate;
+
+                        bookingIdCol.appendChild(bookingIdInput);
+                        userIdCol.appendChild(userIdInput);
+                        partySizeCol.appendChild(partySizeInput);
+                        bookingDateCol.appendChild(bookingDateInput);
+
+                        bookingDetailsDiv.appendChild(bookingIdCol);
+                        bookingDetailsDiv.appendChild(userIdCol);
+                        bookingDetailsDiv.appendChild(partySizeCol);
+                        bookingDetailsDiv.appendChild(bookingDateCol);
+
+                        textCenterDiv.appendChild(bookingDetailsDiv);
+                        colDiv.appendChild(textCenterDiv);
+                        rowDiv.appendChild(colDiv);
+                        containerDiv.appendChild(rowDiv);
+
+                        let MenuForm = document.getElementById("searchBookingForm");
+                        MenuForm.appendChild(containerDiv)
                     });
                 }
                 else
@@ -767,7 +802,6 @@ document.addEventListener('DOMContentLoaded', function ()
                     let message = document.createElement("span");
                     message.textContent = "There are no bookings with the given information.";
                     message.classList.add("text-danger"); // Apply the Bootstrap class to make the text red
-
                     alert.appendChild(message);
 
                     // Append the alert to the container or any desired location in the DOM
