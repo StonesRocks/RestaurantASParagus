@@ -27,14 +27,19 @@ namespace ProjectASParagus.Controllers
         }
 
         //denna funktionen kallas när användaren har fyllt i bookings uppgifter
-        [HttpGet("ShowBookings/{month?}/{day?}/{hour?}/{minute?}")]
-        public ActionResult ShowBooking(int? month = null, int? day = null, int? hour = null, int? minute = null)
+        [HttpGet("GetOccupancy/{year?}/{month?}")]
+        public ActionResult ShowBooking(int? year = null, int? month = null)
         {
+            if(year == null || year <= 0)
+            {
+                year = DateTime.Now.Year;
+            }
             if(month == null || month <= 0 || month >12)
             {
                 month = DateTime.Now.Month;
             }
             int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, (int)month);
+            /*
             if (day == null || day <= 0 || day > daysInMonth)
             {
                 day = DateTime.Now.Day;
@@ -49,13 +54,12 @@ namespace ProjectASParagus.Controllers
             }
             int quarters = (int)minute/15;
             minute = quarters * 15;
-
-            DateTime cleanDate = new DateTime(DateTime.Now.Year, (int)month, (int)day, (int)hour, (int)minute, 0);
+            */
+            DateTime cleanDate = new DateTime((int)year, (int)month, 1, 0, 0, 0);
 
             //Felhantera datument ifall datumet inte ör tillgängligt.
-            Dictionary<DateTime, int> bookingDictionary = bookingService.GiveBookings(cleanDate);
 
-            return Ok(bookingDictionary);
+            return Ok(bookingService.GiveBookings(cleanDate));
         }   
 
         [HttpDelete("DeleteBooking/{id}")]

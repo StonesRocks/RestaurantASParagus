@@ -8,6 +8,14 @@ let dateDiv = document.getElementById("BookingButtonDiv");
 let timeDiv = document.getElementById("TimeBookingButtonDiv");
 let setMonth = document.getElementById("SelectedMonth");
 let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+let BookingDictionary = {};
+let MaxOccupancyPerTimeStamp = 15;
+let VisitDuration = 2 * 60;
+let DurationPrecision = 15;
+let StartingTime = 6 * 60;
+let EndingTime = 21 * 60;
+let MaxOccupancyPerDay = (EndingTime - StartingTime) / 15 * MaxOccupancyPerTimeStamp;
+
 let url = window.location.href;
 let adminUser = false;
 let ActiveUser = null;
@@ -20,6 +28,7 @@ DaySetup();
 
 datePicker.addEventListener("change", function () {
     DaySetup();
+    UpdateOccupancy();
 });
 
 userPassField.addEventListener("keypress", function (e) {
@@ -42,6 +51,7 @@ window.onload = function ()
     createUserDiv();
     findUserDiv();
     editUserDiv();
+    UpdateOccupancy();
 
     let navbar = document.getElementById("navbar");
 
@@ -486,24 +496,142 @@ function DaySetup() {
     setMonth.innerHTML = new Date(year, month, day).toLocaleString('default', { month: 'long' });
     for (let i = 0; i < numberOfDays; i++) {
         let button = document.createElement("button");
+        button.id = "Day" + (i + 1);
+        button.value = 0;
         button.innerHTML = i + 1;
         let col = (firstcol + i) % 7;
         button.style.gridColumn = `${col + 1}`;
         let row = Math.floor((firstcol + i) / 7) + 2;
         button.style.gridRow = `${row}`;
-        button.style.backgroundColor = "red";
+        button.style.backgroundColor = "rgb(0, 255, 0)";
         dateDiv.appendChild(button);
     }
     TimeSetup(6 * 60, 21 * 60, 15);
 }
 
+function UpdateOccupancy() {
+    ShowOccupancy()
+        .then(data => {
+            //console.log(data);
+            let groupedData = ConvertApiResponseToJsDict(data);
+            //console.log(groupedData);
+            let currentDate = GetDate(datePicker.value);
+            let month = currentDate.getMonth();
+
+            BookingDictionary = {};
+
+            Object.keys(groupedData).forEach(key => {
+                let dateKey = new Date(key);
+                let day = dateKey.getDate();
+
+                // Ensure that timeDictperDay is initialized for every day
+                if (BookingDictionary[day] === undefined) {
+                    BookingDictionary[day] = {};
+                }
+
+                let time = dateKey.getHours() * 60 + dateKey.getMinutes();
+                if (BookingDictionary[day][time] === undefined) {
+                    BookingDictionary[day][time] = groupedData[key];
+                } else {
+                    BookingDictionary[day][time] += groupedData[key];
+                }
+            });
+
+            //console.log(BookingDictionary);
+
+            let redFactorForDay = 255 / MaxOccupancyPerDay;
+            let redFactorForTime = 255 / MaxOccupancyPerTimeStamp;
+            for (let day in BookingDictionary) {
+                let totalDailyOccupancy = 0;
+                for (let time in BookingDictionary[day]) {
+                    let occupancy = BookingDictionary[day][time];
+                    totalDailyOccupancy += occupancy;
+                    //let button = document.getElementById("Day" + day);
+                    let red = Math.floor(redFactorForTime * occupancy);
+                    let green = 255 - red;
+                }
+                let button = document.getElementById("Day" + day);
+                let red = Math.floor(redFactorForDay * totalDailyOccupancy);
+                let green = 255 - red;
+                button.style.backgroundColor = `rgb(${red}, ${green}, 0)`;
+            }
+            let day = GetDate(datePicker.value).getDate();
+            if (BookingDictionary[day] !== undefined) {
+                let timeOptions = timeDiv.getElementsByTagName("option");
+                Array.from(timeOptions).forEach(option => { // Convert timeOptions to an array
+                    if (BookingDictionary[day][option.id] !== undefined) {
+                        let occupancy = BookingDictionary[day][option.id];
+                        let red = Math.floor(redFactorForTime * occupancy);
+                        let green = 255 - red;
+                        option.style.backgroundColor = `rgb(${red}, ${green}, 0)`
+                    };
+                });
+            }
+        });
+}
+
+
+async function ShowOccupancy() {
+    let currentDate = GetDate(datePicker.value);
+    let year = currentDate.getFullYear();
+    let month = currentDate.getMonth() + 1;
+
+    try {
+        const response = await fetch(url + "api/Booking/GetOccupancy/" + year + "/" + month, {
+            method: "GET"
+        });
+
+        if (response.ok) {
+            const jsonData = await response.json();
+            // Convert the JSON object to a dictionary
+            const occupancyDictionary = {};
+
+            for (const key in jsonData) {
+                occupancyDictionary[key] = jsonData[key];
+            }
+            //console.log(occupancyDictionary);
+            return occupancyDictionary;
+        } else {
+            throw new Error('Network response was not ok.');
+        }
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error;
+    }
+}
+
+
+function ConvertApiResponseToJsDict(data) {
+    //console.log(data);
+    let groupedData = {};
+    for (const timestamp in data) {
+        const date = new Date(timestamp);
+        const day = date
+        if (!groupedData[day]) {
+            groupedData[day] = data[timestamp];
+        }
+        //groupedData[day].push(data[timestamp]);
+    }
+    return groupedData;
+}
+
 function TimeSetup(startTime = 6 * 60, stopTime = 21 * 60, interval = 60) {
-    timeDiv.innerHTML = "";
-    let TimeSelect = document.createElement("select")
+    let TimeSelect;
+    if (document.getElementById("TimeSelect") === null) {
+        TimeSelect = document.createElement("select");
+        TimeSelect.id = "TimeSelect";
+    }
+    else {
+        TimeSelect = document.getElementById("TimeSelect");
+        TimeSelect.innerHTML = "";
+    }
+    let date = GetDate(datePicker.value);
+    let day = date.getDate();
     for (let i = startTime; i < stopTime; i += interval) {
         let option = document.createElement("option");
         option.innerHTML = formatTime(i);
-        option.style.backgroundColor = "red";
+        option.id = i;
+        option.style.backgroundColor = "rgb(0, 255, 0)";
         option.style.margin = "5px";
         TimeSelect.appendChild(option);
     }
@@ -513,11 +641,6 @@ function TimeSetup(startTime = 6 * 60, stopTime = 21 * 60, interval = 60) {
 function GetDate(dateHTML) {
     let dateValue = dateHTML;
     let dateJS = new Date(dateValue);
-    //let year = date.getFullYear();
-    //let month = date.getMonth() + 1;
-    //let day = date.getDate();
-    //console.log(year, month, day);
-    //return [year, month, day];
     return dateJS;
 }
 

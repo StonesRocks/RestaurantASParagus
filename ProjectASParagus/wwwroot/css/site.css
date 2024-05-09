@@ -38,11 +38,7 @@ body {
 }
 
 .TimePickerGrid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: minmax(0px, auto);
-    gap: 5px;
-    margin: 5px;
+
 }
 
 .DivBorder {

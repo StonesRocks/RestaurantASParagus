@@ -70,7 +70,7 @@ namespace ProjectASParagus.Services
         //Funktionen ger tillbaka lediga tider och tillgängliga tider.
         public Dictionary<DateTime,int> GiveBookings(DateTime date)
         {
-            Dictionary<DateTime,int> Capacity = new Dictionary<DateTime,int>(); //Key = tid mellan 10:00-17:00, Value = Antal lediga platser.
+            Dictionary<DateTime,int> Capacity = new Dictionary<DateTime,int>();
             DateTime firstSearchParam = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
             DateTime secondSearchParam = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59);
 
@@ -78,12 +78,16 @@ namespace ProjectASParagus.Services
 
             foreach (var booking in dbResult)
             {
-                if (Capacity.ContainsKey(booking.BookingDate)){
-                    Capacity[booking.BookingDate] += booking.PartySize;
-                }
-                else
+                for (int i = 0; i < 120; i += 15)
                 {
-                    Capacity.Add(booking.BookingDate, booking.PartySize);
+                    DateTime dateCovered = booking.BookingDate.AddMinutes(i);
+                    if (Capacity.ContainsKey(dateCovered)){
+                        Capacity[dateCovered] += booking.PartySize;
+                    }
+                    else
+                    {
+                        Capacity.Add(dateCovered, booking.PartySize);
+                    }
                 }
             }
             return Capacity;
