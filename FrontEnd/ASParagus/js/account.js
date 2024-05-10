@@ -1,8 +1,30 @@
+// Check session on page load to maintain user state
+document.addEventListener('DOMContentLoaded', () => {
+    const buttonsElement = document.getElementById('buttons');
+    const bookingOptionsElement = document.getElementById('booking-options');
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    
+    if (loggedInUser) {
+        const user = JSON.parse(loggedInUser);
+        showUserOptions(user);
+    } else {
+        // Ensure the element exists before trying to change its style
+        if (buttonsElement) {
+            buttonsElement.style.display = 'block';
+        }
+        if (bookingOptionsElement) {
+            bookingOptionsElement.style.display = 'none';
+        }
+    }
+});
+
+
 function showSignUp() {
     document.getElementById('signup-form').style.display = 'block';
     document.getElementById('login-form').style.display = 'none';
     document.getElementById('update-user-form').style.display = 'none';
 }
+
 
 function showLogIn() {
     document.getElementById('signup-form').style.display = 'none';
@@ -10,6 +32,7 @@ function showLogIn() {
     document.getElementById('update-user-form').style.display = 'none';
 }
 
+// Hide the forms when user is not logged in
 function hideForms() {
     document.getElementById('signup-form').style.display = 'none';
     document.getElementById('login-form').style.display = 'none';
@@ -89,17 +112,48 @@ function loginUser(event) {
     });
 }
 
+// Logout stuff
+function logoutUser() {
+    sessionStorage.removeItem('loggedInUser');
+    alert('You have been logged out.');
+
+    const buttonsElement = document.getElementById('buttons');
+    if (buttonsElement) {
+        buttonsElement.style.display = 'block';
+    }
+
+    const bookingOptionsElement = document.getElementById('booking-options');
+    if (bookingOptionsElement) {
+        bookingOptionsElement.style.display = 'none';
+    }
+
+    window.location.href = 'index.html';
+}
+
+
 // Display user-specific options after login
 function showUserOptions(user) {
-    const userOptions = document.createElement('div');
-    userOptions.id = 'user-options';
-    userOptions.innerHTML = `
+    const userOptionsDiv = document.createElement('div');
+    userOptionsDiv.id = 'user-options';
+    userOptionsDiv.innerHTML = `
         <h2>Welcome, ${user.userName}!</h2>
         <button onclick="showChangeUserDetailsForm()">Change Details</button>
         <button onclick="deleteUserAccount()">Delete Account</button>
+        <button onclick="logoutUser()">Log Out</button>
     `;
-    document.getElementById('account-container').appendChild(userOptions);
+    document.getElementById('account-container').appendChild(userOptionsDiv);
+
+    const buttonsElement = document.getElementById('buttons');
+    if (buttonsElement) {
+        buttonsElement.style.display = 'none';
+    }
+
+    const bookingOptionsElement = document.getElementById('booking-options');
+    if (bookingOptionsElement) {
+        bookingOptionsElement.style.display = 'block';
+    }
 }
+
 
 // Show the form to update user details
 function showChangeUserDetailsForm() {
@@ -162,7 +216,6 @@ function updateUserDetails(event) {
     });
 }
 
-
 // Delete a user account
 function deleteUserAccount() {
     const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
@@ -195,11 +248,55 @@ function deleteUserAccount() {
     });
 }
 
-// Check session on page load to maintain user state
-document.addEventListener('DOMContentLoaded', () => {
-    const loggedInUser = sessionStorage.getItem('loggedInUser');
+
+function fetchUserBookings() {
+    const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
     if (loggedInUser) {
-        const user = JSON.parse(loggedInUser);
-        showUserOptions(user);
+        fetch(`https://localhost:7154/api/Booking/GetUserBookings/${loggedInUser.userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('sessionToken')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(bookings => {
+            const bookingsList = document.getElementById('bookings-list');
+            bookingsList.innerHTML = ''; // Clear previous bookings
+
+            bookings.forEach(booking => {
+                const li = document.createElement('li');
+                li.textContent = `Booking on ${booking.bookingDate} for ${booking.partySize} guests`;
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteBooking(booking.bookingId);
+                li.appendChild(deleteBtn);
+                bookingsList.appendChild(li);
+            });
+        })
+        .catch(error => console.error('Failed to fetch bookings:', error));
     }
+}
+
+function deleteBooking(bookingId) {
+    fetch(`https://localhost:7154/api/Booking/DeleteBooking/${bookingId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${sessionStorage.getItem('sessionToken')}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Booking deleted successfully!');
+            fetchUserBookings(); // Refresh the list of bookings
+        } else {
+            alert('Failed to delete booking.');
+        }
+    })
+    .catch(error => console.error('Error deleting booking:', error));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchUserBookings(); // Load user bookings when the page loads
 });

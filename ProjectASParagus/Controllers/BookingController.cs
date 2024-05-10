@@ -26,8 +26,6 @@ namespace ProjectASParagus.Controllers
             return Conflict();
         }
 
-
-
         //denna funktionen kallas när användaren har fyllt i bookings uppgifter
         [HttpGet("GetOccupancy/{year?}/{month?}")]
         public ActionResult ShowBooking(int? year = null, int? month = null)

@@ -7,10 +7,11 @@
     <title>Booking - Restaurant ASParagus</title>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/booking.css">
-
 </head>
 
+<body>
     <div class="container">
+        <!-- Navigation -->
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
@@ -21,11 +22,9 @@
                 <li><a href="account.html">Account</a></li>
             </ul>
         </nav>
-        <main>
-            
-        </main>
 
-        <body>
+        <main>
+            <!-- Calendar Structure -->
             <table id="tablData">
                 <tr>
                     <th style="border-radius: 10px 0 0 10px;">
@@ -36,7 +35,6 @@
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%0Aaria-label='test' role='img' viewBox='-25 -25 150 150'%3E%3Ccircle cx='50' cy='50' r='46' stroke='black' stroke-width='4' fill='none' /%3E%3Cpolygon points='35,25 35,75 75,50' style='fill:black;' /%3E%3C/svg%3E%0A" class="butn" alt="&gt;" onclick="volgende();"/>
                     </th>
                 </tr>
-            
                 <tr>
                     <td id="wd1" class="wd">Mån</td>
                     <td id="wd2" class="wd">Tis</td>
@@ -46,64 +44,20 @@
                     <td id="wd6" class="wd">Lör</td>
                     <td id="wd7" class="wd">Sön</td>
                 </tr>
-                <tr>
-                    <td id="xy1"></td>
-                    <td id="xy2"></td>
-                    <td id="xy3"></td>
-                    <td id="xy4"></td>
-                    <td id="xy5"></td>
-                    <td id="xy6"></td>
-                    <td id="xy7"></td>
-                </tr>
-                <tr>
-                    <td id="xy8"></td>
-                    <td id="xy9"></td>
-                    <td id="xy10"></td>
-                    <td id="xy11"></td>
-                    <td id="xy12"></td>
-                    <td id="xy13"></td>
-                    <td id="xy14"></td>
-                </tr>
-                <tr>
-                    <td id="xy15"></td>
-                    <td id="xy16"></td>
-                    <td id="xy17"></td>
-                    <td id="xy18"></td>
-                    <td id="xy19"></td>
-                    <td id="xy20"></td>
-                    <td id="xy21"></td>
-                </tr>
-                <tr>
-                    <td id="xy22"></td>
-                    <td id="xy23"></td>
-                    <td id="xy24"></td>
-                    <td id="xy25"></td>
-                    <td id="xy26"></td>
-                    <td id="xy27"></td>
-                    <td id="xy28"></td>
-                </tr>
-                <tr>
-                    <td id="xy29"></td>
-                    <td id="xy30"></td>
-                    <td id="xy31"></td>
-                    <td id="xy32"></td>
-                    <td id="xy33"></td>
-                    <td id="xy34"></td>
-                    <td id="xy35"></td>
-                    </tr>
-                <tr>
-                    <td id="xy36"></td>
-                    <td id="xy37"></td>
-                    <td id="xy38"></td>
-                    <td id="xy39"></td>
-                    <td id="xy40"></td>
-                    <td id="xy41"></td>
-                    <td id="xy42"></td>
-                </tr>
+                <!-- Placeholder for days, ensure these are dynamically filled or managed via JS -->
+                <tr><td id="xy1"></td><td id="xy2"></td><td id="xy3"></td><td id="xy4"></td><td id="xy5"></td><td id="xy6"></td><td id="xy7"></td></tr>
+                <tr><td id="xy8"></td><td id="xy9"></td><td id="xy10"></td><td id="xy11"></td><td id="xy12"></td><td id="xy13"></td><td id="xy14"></td></tr>
+                <tr><td id="xy15"></td><td id="xy16"></td><td id="xy17"></td><td id="xy18"></td><td id="xy19"></td><td id="xy20"></td><td id="xy21"></td></tr>
+                <tr><td id="xy22"></td><td id="xy23"></td><td id="xy24"></td><td id="xy25"></td><td id="xy26"></td><td id="xy27"></td><td id="xy28"></td></tr>
+                <tr><td id="xy29"></td><td id="xy30"></td><td id="xy31"></td><td id="xy32"></td><td id="xy33"></td><td id="xy34"></td><td id="xy35"></td></tr>
+                <tr><td id="xy36"></td><td id="xy37"></td><td id="xy38"></td><td id="xy39"></td><td id="xy40"></td><td id="xy41"></td><td id="xy42"></td></tr>
             </table>
 
-            <div class="time-availability-container">
-                
+            <!-- Message to prompt login if not logged in -->
+            <p id="login-prompt" style="text-align: center; display: none;">Logga in för att skapa en bokning</p>
+
+            <!-- Booking Options, shown only when user is logged in -->
+            <div class="time-availability-container" id="booking-options">
                 <label for="timePicker">Önskad tid</label>
                 <select id="timePicker">
                     <option value="12:00">12:00</option>
@@ -143,7 +97,6 @@
                     <option value="20:30">20:30</option>
                     <option value="20:45">20:45</option>
                     <option value="21:00">21:00</option>
-
                 </select>
                 <label for="guestPicker">Antal gäster:</label>
                 <select id="guestPicker">
@@ -157,24 +110,13 @@
                 <div id="availabilityBox">Tillgänglighet ska synas här. Soon™</div>
                 <button onclick="continueToBooking()">Forsätt til bokning</button>
             </div>
+        </body>
 
-            
-            <container>
-                <time-dropdown>
-
-                </time-dropdown>
-            </container>
-
-        </div>
-</body>
-        <footer>Footer</footer>
-
+        <footer>
+            <p>&copy; ASParagus. All rights reserved.</p>
+        </footer>
     </div>
-    
+    <script src="js/booking.js"></script>
+</body>
 
-<footer>
-    <!-- Footer section -->
-    <p>&copy; ASParagus. All rights reserved.</p>
-</footer>
-<script src="js/booking.js"></script>
 </html>

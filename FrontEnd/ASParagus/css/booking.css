@@ -222,8 +222,8 @@ button:hover {
 }
 
 
-/*centers everything*/
-.time-availability-container {
+/*centers everything, allegedly. */
+#booking-options {
     display: flex;
     flex-direction: column;
     align-items: center;

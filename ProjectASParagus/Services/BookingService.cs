@@ -57,7 +57,18 @@ namespace ProjectASParagus.Services
         //kollar om det finns plats på den angivna tiden 
         private int GetSumOfPers(Booking booking)
         {
-            //Linq funktioner för att kolla om restaurangen har plats på den angivna tiden. 
+            // Linq funktioner för att kolla om restaurangen har plats på den angivna tiden. 
+
+
+            // dear whoever cooked this,
+            // this might not be bussin since it includes the current booking's party size two times back to back
+            // once in the method call itself and again in sumOfBookings
+            // orewa ochinchin ga daisuki nandayo
+            // oh you want an example... try booking a table (lmao) for 99 people for example
+            // did I add way too many bookings and ended up with an error? maybe. Did I spend too much time on finding out what was wrong? maybe
+            // I'll leave it to the original chef to reheat this since it's working right now.
+            // Time of comment: 03:54, 10.05.2024
+
             int totalGuests = db.Bookings
                               .Where(b => b.BookingDate == booking.BookingDate) 
                               .Sum(b => b.PartySize);

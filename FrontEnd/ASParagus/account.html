@@ -65,6 +65,12 @@
                     <button type="submit">Log In</button>
                     <button type="button" onclick="hideForms()">Cancel</button>
                 </form>
+
+                <div id="user-bookings">
+                    <h3>Your Bookings:</h3>
+                    <ul id="bookings-list"></ul> <!-- This will be populated by JavaScript -->
+                </div>
+                
                 
                 <!-- Form for updating user details, initially hidden -->
                 <form id="update-user-form" style="display:none;" onsubmit="updateUserDetails(event)">
