@@ -120,15 +120,20 @@ namespace ProjectASParagus.Services
                 // Skip updating the password unless it's actually changed
                 if (property.Name == "userPass")
                 {
-                    if (!string.IsNullOrWhiteSpace(user.userPass) && !BCrypt.Net.BCrypt.Verify(user.userPass, oldUser.userPass))
+                    if (!string.IsNullOrWhiteSpace(user.userPass) && !BCrypt.Net.BCrypt.Verify(user.userPass, oldUser.userPass) && user.userPass != oldUser.userPass)
                     {
                         // Only hash and set new password if it's actually different
                         // oldUser.userPass = BCrypt.Net.BCrypt.HashPassword(user.userPass);
                     }
                     continue;
                 }
-                var value = property.GetValue(user);
-                property.SetValue(oldUser, value);
+                else
+                {
+                    var value = property.GetValue(user);
+                    property.SetValue(oldUser, value);
+                }
+
+
             }
             db.SaveChanges();
             return true;
