@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const menuContainer = document.querySelector('.menu-container');
         menuItems.forEach(item => {
             console.log(item);
-            // Create HTML elements for each menu item
+            // Creates html elements for each menu item
             const menuItemDiv = document.createElement('div');
             menuItemDiv.classList.add('menu-item');
 

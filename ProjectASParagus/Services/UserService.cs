@@ -78,6 +78,17 @@ namespace ProjectASParagus.Services
             return true;
         }
 
+        /*
+        
+        The method wasn't reflectingg to update all properties of the 
+        User object indisscriminately, which includes the password. 
+        This means that if a password field is sent from 
+        the frontend (even it it isn't intended to be changed), 
+        it will overwrite the existing password without hashing.
+
+        tldr; if user changed password, the new password wasn't #hashed# and user could no longer log in.
+
+
         public bool UpdateUser(User user)
         {
             User oldUser = db.Users.Find(user.UserId);
@@ -94,6 +105,36 @@ namespace ProjectASParagus.Services
             db.SaveChanges();
             return true;
         }
+        */
+
+        public bool UpdateUser(User user)
+        {
+            User oldUser = db.Users.Find(user.UserId);
+            if (oldUser == null)
+            {
+                return false;
+            }
+            var properties = typeof(User).GetProperties();
+            foreach (var property in properties)
+            {
+                // Skip updating the password unless it's actually changed
+                if (property.Name == "userPass")
+                {
+                    if (!string.IsNullOrWhiteSpace(user.userPass) && !BCrypt.Net.BCrypt.Verify(user.userPass, oldUser.userPass))
+                    {
+                        // Only hash and set new password if it's actually different
+                        oldUser.userPass = BCrypt.Net.BCrypt.HashPassword(user.userPass);
+                    }
+                    continue;
+                }
+                var value = property.GetValue(user);
+                property.SetValue(oldUser, value);
+            }
+            db.SaveChanges();
+            return true;
+        }
+
+
 
         public List<User> FindUser(List<string> terms)
         {

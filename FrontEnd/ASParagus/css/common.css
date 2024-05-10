@@ -2,7 +2,7 @@ body {
     background-color: #ffffff;
     color: aliceblue;
     font-family: 'Courier New', Courier, monospace;
-    cursor: url(/images/asparagusCursor.cur), auto;
+    cursor: url('/images/asparagusCursor.cur'), auto;
 }
 
 
@@ -24,6 +24,8 @@ body {
 /* common.css - Basic shared styles for the entire website */
 
 /* Reset margin and padding for all elements */
+
+
 * {
     margin: 0;
     padding: 0;

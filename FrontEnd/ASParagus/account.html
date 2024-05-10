@@ -21,7 +21,6 @@
                 <li><a href="booking.html">Booking</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="account.html">Account</a></li>
-
             </ul>
         </nav>
     </header>
@@ -46,7 +45,6 @@
                     <div class="row">
                         <input type="text" id="phoneNumber" placeholder="Phone Number" required>
                     </div>
-                    <!-- User Role Selection -->
                     <div class="row">
                         <select id="userRole">
                             <option value="User">User</option>
@@ -68,10 +66,25 @@
                     <button type="button" onclick="hideForms()">Cancel</button>
                 </form>
                 
-                
+                <!-- Form for updating user details, initially hidden -->
+                <form id="update-user-form" style="display:none;" onsubmit="updateUserDetails(event)">
+                    <div class="row">
+                        <input type="text" id="updateUserName" placeholder="New Username" required>
+                    </div>
+                    <div class="row">
+                        <input type="password" id="updateUserPass" placeholder="New Password" required>
+                    </div>
+                    <div class="row">
+                        <input type="email" id="updateEmail" placeholder="New E-mail Address" required>
+                    </div>
+                    <div class="row">
+                        <input type="text" id="updatePhoneNumber" placeholder="New Phone Number" required>
+                    </div>
+                    <button type="submit">Update Details</button>
+                    <button type="button" onclick="hideForms()">Cancel</button>
+                </form>
             </div>
         </div>
-        
     </main>
 
     <footer>
@@ -79,7 +92,6 @@
         <p>&copy; ASParagus. All rights reserved.</p>
     </footer>
 
-    
+    <script src="js/account.js"></script>
 </body>
-<script src="js/account.js"></script>
 </html>

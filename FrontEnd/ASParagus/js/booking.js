@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Optional: Display selected date somewhere or store it
         console.log('Selected Date:', cell.innerText);
-        // You can modify here to update UI or make a booking call
     }
 
     function prevMonth() {
@@ -106,5 +105,5 @@ document.addEventListener('DOMContentLoaded', function() {
 function continueToBooking() {
     const selectedTime = document.getElementById('timePicker').value;
     alert('Booking time selected: ' + selectedTime);
-    // add code to integrate with the API etc
+    // API 
 }
