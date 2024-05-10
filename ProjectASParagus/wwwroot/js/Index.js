@@ -55,9 +55,8 @@ window.onload = function ()
     UpdateOccupancy();
 
     let navbar = document.getElementById("navbar");
-
-    if (navbar.style.display === "block" || navbar.style.display === "") {
-        navbar.style.display = "none";
+    if (!adminUser) {
+        navbar.style.visibility = "hidden";
     }
 }
 
@@ -410,6 +409,7 @@ function LoginUser() {
         .then(jsonResponse => {
             ActiveUser = jsonResponse;
             console.log("Active User: " + ActiveUser)
+            console.log("Active User Role: " + ActiveUser.userRole)
             //console.log("JSON: " + jsonResponse);
             if (jsonResponse.userRole === "Admin") {
                 adminUser = true;
@@ -448,11 +448,13 @@ function AdminMenu() {
         let bookingDiv = document.getElementById("BookingDiv");
         let userDiv = document.getElementById("UserDiv");
         let searchbookingdiv = document.getElementById("searchBookingForm");
+        let navbar = document.getElementById("navbar");
 
         loginDiv.style.visibility = "hidden";
         searchbookingdiv.style.visibility = "visible";
         bookingDiv.style.visibility = "visible";
         userDiv.style.visibility = "visible";
+        navbar.style.visibility = "visible";
 
         welcome.innerHTML = `Welcome ${ActiveUser.userName}`;
     }
