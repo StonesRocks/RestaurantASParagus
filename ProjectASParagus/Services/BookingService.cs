@@ -235,5 +235,14 @@ namespace ProjectASParagus.Services
             return false;
         }
         */
+
+
+        //fmlpleaswork: part 1
+        public int GetAvailableSeats(DateTime date)
+        {
+            var bookings = db.Bookings.Where(b => b.BookingDate.Date == date.Date).ToList();
+            int bookedSeats = bookings.Sum(b => b.PartySize);
+            return availableSeats - bookedSeats;
+        }
     }
 }

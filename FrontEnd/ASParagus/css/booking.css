@@ -1,5 +1,7 @@
 .current-day {
     color: #ff7600; /* Sets the font color to red for the current day */
+    font-size: large;
+    font-weight: bold;
 }
 
 
@@ -184,6 +186,7 @@ footer {
 #timePicker {
     margin: 10px;
     padding: 5px;
+    background-color: inherit;
 }
 
 #availabilityBox {
@@ -220,7 +223,6 @@ button:hover {
 #timePicker, #guestPicker {
     padding: 5px;
 }
-
 
 /*centers everything, allegedly. */
 #booking-options {

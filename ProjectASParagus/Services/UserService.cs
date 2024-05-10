@@ -123,7 +123,7 @@ namespace ProjectASParagus.Services
                     if (!string.IsNullOrWhiteSpace(user.userPass) && !BCrypt.Net.BCrypt.Verify(user.userPass, oldUser.userPass))
                     {
                         // Only hash and set new password if it's actually different
-                        oldUser.userPass = BCrypt.Net.BCrypt.HashPassword(user.userPass);
+                        // oldUser.userPass = BCrypt.Net.BCrypt.HashPassword(user.userPass);
                     }
                     continue;
                 }

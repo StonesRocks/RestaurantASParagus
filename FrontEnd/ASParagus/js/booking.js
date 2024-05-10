@@ -69,6 +69,35 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update the selectedDate variable with the complete date (YYYY-MM-DD)
         selectedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${cell.innerText.padStart(2, '0')}`;
         console.log('Selected Date:', selectedDate);
+
+        // Fetch availability for the selected date
+        fetchAvailability(selectedDate);
+    }
+
+    // Function to fetch and display availability
+    function fetchAvailability(date) {
+        fetch(`https://localhost:7154/api/Booking/GetAvailability/${date}`)
+            .then(response => response.json())
+            .then(availableSeats => {
+                updateAvailabilityBox(availableSeats);
+            })
+            .catch(error => {
+                console.error('Error fetching availability:', error);
+                document.getElementById('availabilityBox').innerText = 'Error fetching availability';
+            });
+    }
+
+    // Function to update the availability box based on available seats
+    function updateAvailabilityBox(availableSeats) {
+        const box = document.getElementById('availabilityBox');
+        box.innerText = `Available Seats: ${availableSeats}`;
+        if (availableSeats > 50) {
+            box.style.backgroundColor = 'green';
+        } else if (availableSeats > 20) {
+            box.style.backgroundColor = 'yellow';
+        } else {
+            box.style.backgroundColor = 'red';
+        }
     }
 
     // Function to move to the previous month in the calendar

@@ -119,5 +119,21 @@ namespace ProjectASParagus.Controllers
             }
             return Ok(bookingList);
         }
+
+
+        //fmlpleasework: part 2
+        [HttpGet("GetAvailability/{date}")]
+        public ActionResult GetAvailability(DateTime date)
+        {
+            try
+            {
+                int availableSeats = bookingService.GetAvailableSeats(date);
+                return Ok(availableSeats);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error getting availability: {ex.Message}");
+            }
+        }
     }
 }
