@@ -9,7 +9,7 @@ let timeDiv = document.getElementById("TimeBookingButtonDiv");
 let setMonth = document.getElementById("SelectedMonth");
 let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 let BookingDictionary = {};
-let MaxOccupancyPerTimeStamp = 15;
+let MaxOccupancyPerTimeStamp = 100;
 let VisitDuration = 2 * 60;
 let DurationPrecision = 15;
 let StartingTime = 6 * 60;
@@ -19,6 +19,7 @@ let MaxOccupancyPerDay = (EndingTime - StartingTime) / 15 * MaxOccupancyPerTimeS
 let url = window.location.href;
 let adminUser = false;
 let ActiveUser = null;
+let EditUser = null;
 let currentSessionToken = null;
 let roleEnum = ["Admin", "User", "Guest"];
 
@@ -243,9 +244,9 @@ function createUserDiv() {
             })
     });
 
+    userRole.appendChild(option1);
     userRole.appendChild(option2);
     userRole.appendChild(option3);
-    userRole.appendChild(option1);
 
     form.appendChild(userName);
     form.appendChild(userPass);
@@ -303,6 +304,10 @@ function findUserDiv() {
             })
             .then(users => {
                 //console.log(users);
+                let option = document.createElement("option");
+                option.textContent = "Select User";
+                option.value = null;
+                selectUser.appendChild(option);
                 users.forEach(user => {
                     let option = document.createElement("option");
                     //console.log(user.userName + " with id: " + user.userId)
@@ -328,24 +333,10 @@ function editUserDiv() {
     let form = document.createElement("form");
     form.id = "EditUserForm";
     createUserPropertyForm(form);
+    let submitEdit = document.getElementById("EditUserButton");
 
 
-    let submit = document.createElement("input");
-    submit.type = "submit";
-    submit.value = "Edit";
-    submit.addEventListener("click", function (event) {
-        event.preventDefault();
-        let id = form.querySelector("#EditUserFormUserId").value;
-        let name = form.querySelector("#EditUserFormUserName").value;
-        let email = form.querySelector("#EditUserFormEmail").value;
-        let phoneNumber = form.querySelector("#EditUserFormPhoneNumber").value;
-        let role = form.querySelector("#EditUserFormUserRole").value;
 
-        let data = [];
-
-    })
-
-    form.appendChild(submit);
     editUser.appendChild(form);
 }
 
@@ -383,6 +374,7 @@ function SelectedUser(id) {
         })
         .then(User => {
             console.log(User.userName);
+            EditUser = User;
             form.innerHTML = "";
             createUserPropertyForm(form, User);
         })
@@ -813,4 +805,21 @@ document.addEventListener('DOMContentLoaded', function ()
                 console.error('Error:', error);
             });
     });
+
+
+    const SubmitUserEdit = document.getElementById("EditUserButton");
+    SubmitUserEdit.addEventListener('click', function (event) {
+        let User = EditUser;
+        let form = document.getElementById("EditUserForm");
+        let inputElements = form.getElementsByTagName("input");
+        let data = [];
+        for (let i = 0; i < inputElements.length; i++) {
+            data.push(inputElements[i].value);
+        }
+        User.userName = data[1];
+        User.email = data[3];
+        User.phoneNumber = data[4];
+        User.userRole = data[5];
+        UpdateUser(User);
+    })
 });
